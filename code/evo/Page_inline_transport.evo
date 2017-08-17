@@ -1,0 +1,34 @@
+if self.kind in self.playablekinds:
+ span: cls="intransport"
+  #a:href=self.url('auto'), title='show current'
+  # img:src="%s/images/speaker%s.png" % (self.theme_url(),"off" if  self.player.is_paused else ""), id="speakerinline"
+#  if not (req.refresh and self.uid == self.transport.uid):
+    theme = self.theme_url()
+    root = self.uid == 1
+    playing = self.transport.uid
+    # play
+    if not ((root and playing) or (req.refresh and self.uid == playing)):
+     form: action=self.url("play")
+      button: title="play now"
+       img:src="%s/images/play.png" % theme
+    # shuffle
+    if not self.kind=="track":
+     form: action=self.url('shuffle')
+      button: title='shuffle and play now'
+       img:src="%s/images/shuffle.png" % theme
+    # stack
+    if not self.kind=="root": 
+     form:action=self.url("playnext")
+      input:type="hidden",name="return_to",value=req.return_to
+      button: title="play next"
+       img:src="%s/images/playlist.png" % theme
+    # loop
+    if playing and self.kind=="root":
+     form: action=self.url('loop')
+      button: accesskey='L',title='loop'
+       img:src="%s/images/repeat%s.png" % (theme,"-all" if self.player.mode==1 else "",)
+    # repeat
+    if self.uid == playing:
+     form: action=self.url('repeat')
+      button: title="loop"
+       img:src="%s/images/repeat%s.png" % (theme,"-one" if self.player.mode==2 else "",)

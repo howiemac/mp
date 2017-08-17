@@ -1,0 +1,60 @@
+#! /usr/local/bin/python
+#
+# script to clone a copy of mp data from the archive
+# only copies data files which are in use (ie referred to in the music db)
+
+#from sys import argv
+import os, sys, copy, subprocess
+
+import datetime
+today = datetime.date.today().strftime("%y%m%d")
+
+print "starting clone %s..." % today
+
+# required folders
+
+archive="/media/howie/archive/"
+arccodefolder=archive+"code/mp.backup/"
+arcdatafolder=archive+"data/music/"
+
+homefolder="/home/howie/"
+codefolder=homefolder+'code/'
+mpfolder=codefolder+'mp/music/'
+backupfolder=codefolder+"mp.backup/"
+datafolder=homefolder+'data/music/'
+
+# copy the data from the archive
+if True:
+  # - identify the data sub-folders
+  s="%09d" % xuid
+  subfolders=["%s/%s/" % (s[:-6],s[-6:-3],)]
+  uid=copy.copy(xuid)
+  while (maxuid//1000) > (uid//1000): # we have more than one subfolder
+    uid+=1000 
+    s="%09d" % uid
+    subfolder="%s/%s/" % (s[:-6],s[-6:-3],) 
+    subfolders.append(subfolder)
+    # create the new archive folder 
+    os.makedirs(arcdatafolder+subfolder)
+  # - copy the files 
+  files=[]
+  for subfolder in subfolders: 
+    for i in os.listdir(datafolder+subfolder):
+#    
+#      print "XUID=",xuid
+#      print i
+#     
+      if i and (i.find(".")>0): # i.e. ignoring hidden folders and "no-dot" subfolders such as 'thumbs'
+        if int(i.split(".")[0])>xuid:
+          os.system("cp -v %s %s" % (datafolder+subfolder+i,arcdatafolder+subfolder+i))
+          files.append(subfolder+i+"\n")
+  # copy file list to datafiles.txt in update folder
+
+  f=open(updatefolder+'datafiles.txt','w')
+  f.writelines(files) 
+  f.close() 
+# now, all of the data additions are archived
+
+
+# and we are done!
+print "clone of mp data completed"

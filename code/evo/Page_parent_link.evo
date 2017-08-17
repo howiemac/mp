@@ -1,0 +1,8 @@
+# page info include giving link to parent 
+div:
+ pob=self.get_pob()
+ a: href=pob.url()
+  big:pob.get_name()
+ br:
+ br:
+

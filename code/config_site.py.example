@@ -1,0 +1,13 @@
+"""
+config file for site specific items, eg database, port
+THIS SHOULD NOT BE STORED IN THE REPOSITORY
+
+"""
+
+#port='???'  # default is 8080
+#database='???' # default is app folder name
+
+#domains=["127.0.0.1"] #use this for local testing
+#domains=["mydomain.org","www.mydomain.org"] #use this for live site
+
+

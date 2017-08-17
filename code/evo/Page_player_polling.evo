@@ -1,0 +1,21 @@
+# AJAX polling for mp
+if isinstance(self,req.user.Page):
+ # do the refresh polling by AJAX
+ active=self.transport.uid and not self.player.is_paused
+ if active:
+  script:
+   if req.refresh:
+    "function doRefresh(){$.post('%s',function(data){if(data=='yes'){location.reload()} else {setTimeout(doRefresh,parseInt(data)+1500);}})};doRefresh();" % (self.url('trackchange'),)
+   else:
+    "function doMonitor(){$.post('%s',function(data){if(data>0){setTimeout(doMonitor,parseInt(data)+1500);}})};doMonitor();" % (self.url('bgtrackchange'),)
+ if self.player.list:
+  # only poll when we have to
+  poll= "setTimeout(doPoll,330);" if active else ""
+  # ajax fetch time
+  script:
+   "function doPoll(){$.post('%s',function(data){$('#tracktime').html(data);%s})};doPoll();" % (self.url('tracktime'),poll)
+
+## using setInterval seems to perform much worse...
+#  poll= "setInterval(doPoll,300);" if active else ""
+#  script:
+#   "%s;function doPoll(){$.post('%s',function(data){$('#tracktime').html(data)})};doPoll();" % (poll,self.url('tracktime'))

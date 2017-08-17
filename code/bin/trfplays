@@ -1,0 +1,68 @@
+#! /usr/local/bin/python
+#
+# script to create log (trf.log) to transfer plays from old versions of tracks to new versions
+#
+# expects "trfs" list of old / new tracks / plays, one per line, in format: old new plays
+
+trfs="""
+4433 9876 3
+4434 9877 3
+4435 9878 1
+4436 9879 1
+4437 9880 5
+4438 9881 3
+4439 9882 2
+4440 9883 2
+4441 9884 1
+
+4443 9893 1
+4444 9894 3
+4445 9895 1
+4446 9896 2
+4447 9897 1
+4448 9898 1
+4449 9899 12
+4451 9901 1
+
+4453 9910 2 
+4454 9911 2
+4455 9912 4
+4456 9913 5
+4457 9914 2
+4458 9915 1
+4459 9916 2
+4460 9917 1
+4461 9918 1
+4462 9919 1
+
+4464 10637 1
+4465 10638 4
+4466 10639 4
+4467 10640 1
+4468 10641 1
+4469 10642 1
+4470 10643 4
+4471 10644 1
+
+4416 10622 17
+4417 10623 8
+4418 10624 8
+4419 10625 8
+4420 10626 18
+4421 10627 2
+4422 10628 4
+4423 10629 8
+"""
+
+trflog=[]
+for t in trfs.split("\n"):
+  ts=t.strip()
+  if ts: # ignore blank lines
+    old,new,plays=ts.split()
+    trflog.append("%s played at 01/01/2014 00:00:01 -%s" % (old,plays))
+    trflog.append("%s played at 01/01/2014 00:00:01 %s" % (new,plays))
+f=open('trf.zep1.log','w')
+f.write("\n".join(trflog))
+f.close()
+
+print "trf.log created"

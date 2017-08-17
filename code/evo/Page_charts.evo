@@ -1,0 +1,24 @@
+# display a charts listing
+div: id='contentheader'
+  Page_header_start.evo
+  div:id='charts'
+   div: id="pagetitleline"
+    Page_error.evo
+    Page_navigation.evo
+    # title 
+    span: cls='title'
+     req.title
+#    Page_inline_transport.evo 
+  Page_header_end.evo
+  method=req._pl_chartkind.replace(" ","_")
+  a:"previous", href=self.url('%s?month=%s' % (method,req._pl_prevmonth))
+  if req._pl_nextmonth:
+    a:"next", href=self.url('%s?month=%s' % (method,req._pl_nextmonth))
+  "&nbsp;&nbsp;"
+  if req._pl_chartkind!="chart":
+    a:"tracks",href=self.url("chart?month=%s" % req.month)
+  if req._pl_chartkind!="album chart":
+    a:"albums",href=self.url("album_chart?month=%s" % req.month)
+  if req._pl_chartkind!="artist chart":
+    a:"artists",href=self.url("artist_chart?month=%s" % req.month)
+  Page_playlist_table.evo

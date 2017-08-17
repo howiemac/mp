@@ -1,0 +1,220 @@
+/* based on work of Alex Robinson  OTL http://positioniseverything.net/articles/onetruelayout/ 
+
+/* any order cells start here */
+.cell_11 {
+float:left;
+margin:0px;
+padding:0px;
+width: 100%;
+}
+.cell_21 {
+float: left;
+width:49%;
+}
+* html .cell_21 {
+display: inline;
+ }
+.cell_22 {
+float:left;
+width:49%;
+margin-left:1%;
+}
+.cell_31 {
+float:left;
+width:32%;
+margin-right:1%;
+
+ }
+* html .cell_31 {
+display: inline;
+ }
+.cell_32 {
+float: left;
+width:33%;
+margin-right: 1%;
+
+ }
+.cell_33 {
+float:left;
+width:32%;
+
+ }
+.cell_41 {
+float:left;
+width:24%;
+margin-right: 1%;
+
+ }
+ * html .cell_41 {
+display: inline;
+ }
+
+.cell_42 {
+float:left;
+width:24%;
+margin-right: 1%;
+ }
+.cell_43 {
+float:left;
+width:24%;
+margin-right: 1%;  }
+.cell_44 {
+float:left;
+width:24%;
+}
+
+.cell_51 {
+float:left;
+width:19%;
+margin-right: 1%;
+ }
+  * html .cell_51 {
+display: inline;
+ }
+
+.cell_52 {
+float:left;
+width:18%;
+margin-right: 1%;
+ }
+.cell_53 {
+float:left;
+width:18%;
+margin-right: 1%;  }
+.cell_54 {
+float:left;
+width:18%;
+margin-right: 1%; 
+}
+.cell_55 {
+float:left;
+width:19%;
+margin-right: 1%;
+ }
+.cell_61 {
+float:left;
+width:15%;
+margin-right: 1%;
+ }
+ * html .cell_61 {
+display: inline;
+ }
+  
+.cell_62 {
+float:left;
+width:16%;
+margin-right: 1%;
+ }
+.cell_63 {
+float:left;
+width:16%;
+margin-right: 1%;  }
+.cell_64 {
+float:left;
+width:16%;
+margin-right: 1%; 
+}
+.cell_65 {
+float:left;
+width:16%;
+margin-right: 1%;
+ }
+.cell_66 {
+float:left;
+width:15%;
+margin-right: 1%;
+ }
+.cell_11,.cell_21,.cell_22,.cell_31,.cell_32,.cell_33,.cell_41,.cell_42,.cell_43,.cell_44,.cell_51,.cell_52,.cell_53,.cell_54,.cell_55,.cell_61,.cell_62,.cell_63,.cell_64,.cell_65,.cell_66 {}
+/* Start Mac IE5 filter \*/
+.cell_11,.cell_21,.cell_22,.cell_31,.cell_32,.cell_33,.cell_41,.cell_42,.cell_43,.cell_44,.cell_51,.cell_52,.cell_53,.cell_54,.cell_55,.cell_61,.cell_62,.cell_63,.cell_64,.cell_65,.cell_66  {
+padding-bottom: 32767px !important;
+margin-bottom: -32767px !important;
+ }
+@media all and (min-width: 0px) {
+.cell_11,.cell_21,.cell_22,.cell_31,.cell_32,.cell_33,.cell_41,.cell_42,.cell_43,.cell_44,.cell_51,.cell_52,.cell_53,.cell_54,.cell_55,.cell_61,.cell_62,.cell_63,.cell_64,.cell_65,.cell_66  {
+padding-bottom: 0 !important;
+margin-bottom: 0 !important;
+ }
+.cell_11:before,.cell_21:before,.cell_22:before,.cell_31:before,.cell_32:before,.cell_33:before,.cell_41:before,.cell_42:before,.cell_43:before,.cell_44:before,.cell_51:before,.cell_52:before,.cell_53:before,.cell_54:before,.cell_55:before,.cell_61:before,.cell_62:before,.cell_63:before,.cell_64:before,.cell_65:before,.cell_66:before  {
+content: '.';
+display: block;
+background: inherit;
+padding-top: 32767px !important;
+margin-bottom: -32767px !important;
+height: 0;
+ }
+}
+/* End Mac IE5 filter */
+
+#footer_main  {
+position:relative;
+height:0px;
+bottom: 0px;
+padding:0px;
+margin:0px;
+}
+#header  {
+position:relative;
+top: 0px;
+padding:0px;
+margin:0px;
+height: auto;
+}
+
+/* hack for IEs of all persuasions before IE7 */
+* html .page_border_top {
+width:100% !important;
+}
+
+#logo_header,#footer_content{
+position:relative;
+width:100%;
+height:inherit;
+right:0px;
+bottom: 0px;
+margin: 0px;
+padding: 0px;
+}
+
+
+
+/*any order cells end here*/
+
+.row {
+position: relative;
+/* we need this for IE 5.01 - otherwise the columnumns vanish */
+overflow: hidden;
+/* This hides the excess padding in non-IE browsers */
+ }
+/* we need this for IE 5.01 - otherwise the row does not expand to the
+necessary height (unless fixed, this problem becomes even more acute 
+weirdness as the method is enhanced */
+.row {
+/* Normally a Holly-style hack height: 1% would suffice but that causes 
+IE 5.01 to completely columnlapse the row - instead we float it */
+	float: left;
+/* NB. possibly only IE 5.01 needs to get this float value - otherwise 5.5 sometimes 
+(I saw it happen many moons ago) makes the width of row too small 
+the float: none with the comment is ignored by 5.01,
+5.5 and above see it and carry on about their business
+It's probably fine to just remove it, but it's left here 
+just in case that many moons ago problem rears its head again */
+	float/**/: none;
+ }
+/* easy clearing */
+.row:after,.summary:after,#controls:after,#content:after,.section:after, #upperbody:after,#torso:after,#controls:after,#main:after{
+content: '.';
+display: block;
+height: 0px;
+clear: both;
+visibility:hidden;
+ }
+.row,.summary,#controls,#content,.section, #upperbody , #torso, #controls,#main{
+display: inline-block;
+ }
+/*\*/
+.row,.summary,#controls,#content,.section , #upperbody , #torso,#controls,#main{
+display:block;
+word-spacing: -2px;
+ }
+/* end easy clearing */

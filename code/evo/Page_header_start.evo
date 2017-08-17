@@ -1,0 +1,6 @@
+# this should be included for all pages with contentheader
+#
+# controls (will be at a fixed position, via css)
+Page_transport.evo
+# navigation
+Page_next_item.evo

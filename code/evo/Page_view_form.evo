@@ -1,0 +1,19 @@
+# header ##################################
+Page_header.evo
+# content #################################
+div: id="content", cls="%s_content" % self.kind
+  # actions ###############################
+  Page_content_header.evo
+  #start a new row
+  div:cls='row'
+     Page_view_images.evo
+     # text  ##############################
+     Page_view_text.evo
+     # files  #############################
+     Page_view_files.evo
+  #/row
+  # child page add / summaries ############
+  Page_child_pages.evo
+#/content
+# footer (page info and prev/next item) ###
+Page_footer.evo

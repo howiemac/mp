@@ -1,0 +1,30 @@
+if req.searchfor:
+ div: id='contentheader'
+  Page_header_start.evo
+  div:id='pagetitle'
+   # title
+   div: id="pagetitleline"
+   Page_error.evo
+ div: id='content'
+  for page in req.get('results',[]):
+   div: cls='summary'
+    url="%s?searchfor=%s#%s" % (page.url("view"),lib.url_safe(req.searchfor),page.uid) 
+    a:href=url
+     if page.kind=='section':
+      "%s section: " % page.get_pob().kind
+      when=page.get_pob().when.nice(long=False)
+     else:
+      "%s: " % page.kind
+      when=page.when.nice(long=False)
+     span:page.get_name().replace(req.searchfor,"<em>%s</em>" % req.searchfor),cls='big'
+#     span:page.get_name(),cls='big'
+     span: str(when), cls='wee'
+#   div: cls='summarytext'
+     if page.kind=='link':
+      a:page.code,  href=page.code, target="_blank"
+     else:  
+      page.Page_summarytext.evo
+#      span:page.text.summarised(req)
+#      if (page.text.has_more or page.has_children()):
+#       a:'more...', cls='light wee', href=url
+    

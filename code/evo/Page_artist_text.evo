@@ -1,0 +1,3 @@
+# page info include for kind='artist' 
+Page_parent_link.evo
+self.text.formatted(req)  

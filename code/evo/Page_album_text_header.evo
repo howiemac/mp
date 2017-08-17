@@ -1,0 +1,22 @@
+# page info include for kind='album' 
+div:
+ pob=self.get_pob()
+ a: href=pob.url()
+  big:self.artist or pob.get_name()
+ br:
+ br:
+#if not self.player.overviewing:
+ tags=self.get_tags()
+ if tags:
+   div: 
+     span: ' / '.join(tags), cls='light'
+     br:
+     br:
+div:
+  span: self.when , cls="light"
+  "-"
+  span: self.display_length(format=""), cls="light"
+#  "-"
+#  span: "%s track plays" % self.score, cls="light"
+  br:
+  br:

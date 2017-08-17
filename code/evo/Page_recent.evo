@@ -1,0 +1,51 @@
+# display a charts listing
+div: id='contentheader'
+  Page_header_start.evo
+  div:id='recent'
+   div: id="pagetitleline"
+    Page_error.evo
+    Page_navigation.evo
+    # title 
+    span: "recently played", cls='title'
+Page_header_end.evo
+div:
+#  span: "INDEX=%s" % req._pl_index
+#  span: "START=%s" % req._pl_start
+  if '_pl_back' in req:        
+    a:"back...", href=self.url("view?_pl_start=%s" % req._pl_back)
+  table: cls='subtle'
+   tr: cls='head'
+    td:'when'
+    td:'%s tracks' % req._pl_len
+    td:'?'
+    td:'&star;'
+    td:'by'
+    td:'from'
+    td:'plays' if req._pl_chartkind else ''
+   stripe="stripe" 
+   n=lib.safeint(req._pl_start)
+   for tob in req.data:
+    alob=tob.get_pob()
+    stripe=(not stripe) and "stripe" or ""
+    if tob:
+     able="disabled" if tob.rating<0 else "enabled"
+     tr:cls="%s %s" % (able,stripe)
+      td:tob.played.time()
+      td:
+       a:href=tob.url(), title=tob.name
+        tob.name
+      td:tob.rating_symbol(), cls='wee'
+      td:tob.score_symbol(), cls='wee'
+      td:
+       aob=alob.get_pob()
+       a:href=aob.url(), title=aob.name
+        tob.artist
+      td:
+       a:href=alob.url(), title=alob.get_name()
+        alob.get_name()
+      td: cls='wee', style='text-align:right'
+        span: tob.display_length()
+    n=n+1
+div:       
+  if len(req.data)==req.pagesize:
+    a:"more...", href=self.url("recent?pagenext=%s" % req.pagenext)      

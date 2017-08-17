@@ -1,0 +1,37 @@
+# include for Page_view_form.evo 
+for item in req.pages:
+  ok=(item.rating >= self.minrating())
+  state='enabled' if ok else 'disabled'
+  a:name=item.uid
+  div: id="childpages", cls= "summary articles"
+   # image #
+   if req.page in ('view','albums'):
+     item.Page_summaryimage.evo
+   # title  #
+   if self.kind == 'album' and item.seq and item.kind == 'track': 
+    span:"%s:" % item.seq, cls='light'
+   act="edit" if req.edit==self.uid else ""
+   a:href=item.url(act)
+    span:item.get_name(), cls="big %s" % state 
+   # track length
+   if item.kind in self.playablekinds:
+    if item.kind == "track":
+     span: item.display_length(), cls='light wee'
+    # rating
+    span: item.rating_symbol(), cls=state
+    # score
+    if item.kind in ("artist","album","track"):
+     span: item.score_symbol(), cls='%s wee' % state
+    # inline transport
+    if ok:
+     "&nbsp;"
+     item.Page_inline_transport.evo
+   # text, for view pages only  #
+   if req.page in ('view','albums'):
+#     span: "%s" % item.score, cls="light wee"
+     item.Page_summarytext.evo
+if req.page and (len(req.pages) == req.pagesize):
+  div:cls="summary"
+   a:"more...",cls='big',href=self.url('%s?pagenext=%s' % (req.page,req.pagenext))
+ 
+   

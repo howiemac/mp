@@ -1,0 +1,140 @@
+#! /usr/local/bin/python
+#
+# script to archive the master music system - REQUIRES mp to be running at the start
+
+## - pulls from the archive, the slave log since the last update  # CURRENTLY DISABLED
+## - updates master system with the previous slave log  # CURRENTLY DISABLED
+# (note: up to here could alternatively be done in advance - eg immediately after storing the previous slave update in archive)   
+
+# - pushes => archive
+#   - current (master) max uid (retained for use in next update - see "last update max uid" below)
+#   - last update max uid  (slave will checked this against its own record, to ensure that we are in sync on the prior update) 
+#   - latest music SQL dump (in full)
+#   - latest mp code (in full, incuding base)
+#     - renames master log, so as not to be accidentally reused by slave
+#   - data additions since last update
+#
+# ASSUMES no more than one update per day
+#
+
+#from sys import argv
+import os, sys, copy, subprocess
+
+import datetime
+today = datetime.date.today().strftime("%y%m%d")
+
+print "starting archive %s..." % today
+
+# required folders
+#archive="/Volumes/TRANSFER/"
+archive="/media/howie/archive/"
+arccodefolder=archive+"code/mp.backup/"
+arcdatafolder=archive+"data/music/"
+homefolder="/home/howie/"
+codefolder=homefolder+'code/'
+mpfolder=codefolder+'mp/music/'
+backupfolder=codefolder+"mp.backup/"
+datafolder=homefolder+'data/music/'
+#updatefolders - see below
+
+## fetch the slave log # CURRENTLY DISABLED
+#print "fetching log(s)..."
+#xarchivefolder= arccodefolder+sorted([i for i in os.listdir(arccodefolder) if i.startswith("mp.backup.")])[-1]+'/'
+#log=[i for i in os.listdir(xarchivefolder) if i.startswith("eee.")][0]
+## copy it to the mp/logs/additions folder
+#os.system("cp %s%s %slogs/additions/%s " % (xarchivefolder,log,mpfolder,log))
+## force mp to update
+#os.system('wget http://127.0.0.1:8088/1/add_logs')
+#f=open('add_logs')
+#print f.read()
+#f.close()
+#os.remove('add_logs') # os.system('rm add_logs')
+
+# stop mp, before fetching any code or data
+os.system('wget http://127.0.0.1:8088/halt')
+os.remove('halt') # os.system('rm halt')
+
+
+# create new update folder
+#
+# make sure that maxuid will be greater than xuid, by adding a page of kind=='archive'
+os.system('''mysql music -e "insert into pages (kind, stage) values ('archive', 'hide');"''')
+# get the maxuid
+os.system('mysql music -e "select max(uid) from pages" >maxuid')
+f=open("maxuid",'r')
+maxuid=int(f.read().split('\n')[1])
+f.close()
+# define the folders
+updatefolder=backupfolder+("mp.backup.%s/" % maxuid)
+xupdatefolder= backupfolder+sorted([i for i in os.listdir(backupfolder) if i.startswith("mp.backup.")])[-1]+'/'
+# create the new one
+os.mkdir(updatefolder)
+#move the maxuid file into the new folder
+os.system('mv maxuid %smaxuid' % updatefolder) 
+# create the xuid file
+os.system('cp %smaxuid %sxuid' % (xupdatefolder,updatefolder))
+# get the xuid
+f=open("%sxuid" % updatefolder,'r')
+xuid=int(f.read().split('\n')[1])
+f.close()
+
+## copy maxuid to mp/music/logs/
+#os.system('cp %smaxuid %smp/music/logs/maxuid' % (updatefolder,codefolder))
+
+# rename the master log
+os.chdir(codefolder)
+if os.path.isfile("mp/music/logs/mp.log"):
+  os.rename("mp/music/logs/mp.log","mp/music/logs/mac.%s.mp.log" % maxuid)
+
+# backup the music sql database
+print "fetching music database..."
+os.system('mysqldump music > %smusic.mysql.dump' % updatefolder)
+
+# tar and bzip the code
+print "bundling code..."
+os.system("tar cf - mp/ | bzip2 -f > %smp.tar.bz2" % updatefolder)
+
+# copy the data additions
+print "archiving data..."
+if True:
+  # - identify the data sub-folders
+  s="%09d" % xuid
+  subfolders=["%s/%s/" % (s[:-6],s[-6:-3],)]
+  uid=copy.copy(xuid)
+  while (maxuid//1000) > (uid//1000): # we have more than one subfolder
+    uid+=1000 
+    s="%09d" % uid
+    subfolder="%s/%s/" % (s[:-6],s[-6:-3],) 
+    subfolders.append(subfolder)
+    # create the new archive folder 
+    os.makedirs(arcdatafolder+subfolder)
+  # - copy the files 
+  files=[]
+  for subfolder in subfolders: 
+    for i in os.listdir(datafolder+subfolder):
+#    
+#      print "XUID=",xuid
+#      print i
+#     
+      if i and (i.find(".")>0): # i.e. ignoring hidden folders and "no-dot" subfolders such as 'thumbs'
+        if int(i.split(".")[0])>xuid:
+          os.system("cp -v %s %s" % (datafolder+subfolder+i,arcdatafolder+subfolder+i))
+          files.append(subfolder+i+"\n")
+  # copy file list to datafiles.txt in update folder
+
+  f=open(updatefolder+'datafiles.txt','w')
+  f.writelines(files) 
+  f.close() 
+# now, all of the data additions are archived
+
+# copy the update folder to the archive
+print "archiving code and database..."
+os.system('cp -r %s %s' % (updatefolder[:-1],arccodefolder[:-1]))
+
+### restart the system
+#print "restarting"
+#os.chdir(mpfolder+"code/")
+#subprocess.call('./start', shell=True) # restart the system
+
+# and we are done!
+print "archive %s completed" % maxuid

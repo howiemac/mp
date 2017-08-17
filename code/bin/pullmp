@@ -1,0 +1,95 @@
+#! /usr/bin/python
+#
+# script to update slave music system from archived master update
+# - pulls <= archive
+#   - current (master) max uid (retained for use in next update)
+#   - last update max uid  is checked against slave record, to ensure that we are in sync on the prior update
+#   - latest mp code (in full, incuding base)
+#   - latest music SQL dump (in full)
+#   - data additions since last update
+# - pushes => archive
+#   - slave log since last update 
+#
+
+import os, sys, subprocess
+
+import datetime
+today = datetime.date.today().strftime("%y%m%d")
+
+print "fetching update from archive..." 
+
+# required folders
+archive="/media/howie/archive/code/mp.backup/"
+arcdatafolder="/media/howie/archive/data/music/"
+homefolder="/home/howie/"
+codefolder=homefolder+'code/'
+#backupfolder=codefolder+"mp.backup/"
+datafolder=homefolder+'data/music/'
+
+# stop mp
+try:
+  os.system('wget http://127.0.0.1:8088/halt')
+except:
+  pass
+
+
+# make the code folder current
+os.chdir(codefolder)
+# find the update folder
+currentupdate=sorted([i for i in os.listdir(archive) if i.startswith("mp.backup.")])[-1]+'/'
+updatefolder= archive+currentupdate
+# get maxuid
+maxuid=currentupdate[:-1].rsplit(".",1)[1]
+# fetch local xuid from existing code
+f=open("mp/music/logs/maxuid",'r')
+xuid=int(f.read().split('\n')[1])
+f.close()
+# fetch archive xuid, and check it
+f=open("%sxuid" % updatefolder,'r')
+if xuid!=int(f.read().split('\n')[1]): # something is wrong...
+  print "version mismatch - xuid does not agree - update aborted"
+  sys.exit()
+f.close()
+
+# copy the log file to the archive
+logfile = 'eee.%s.mp.log' % maxuid
+os.system('cp mp/music/logs/mp.log %s%s' % (updatefolder,logfile))
+# fetch the music sql database (do this first so we get an early warning if mp is still running)
+print "fetching new database"
+os.system('mysql music -e "drop database music; create database music;"') 
+os.system('mysql music < %smusic.mysql.dump' % updatefolder)
+
+
+# fetch the data additions
+print "fetching data additions"
+f=open("%sdatafiles.txt" % updatefolder)
+files=f.read().split('\n')
+# O/S !!!!!!!!!!!! add any new folders here.....
+for i in files:
+  command='cp -v %s%s %s%s' % (arcdatafolder,i,datafolder,i)
+#  print command
+  os.system(command)
+
+# fetch the code
+print "fetching code"
+os.rename('mp','mp.%s' % xuid) # move the old folder out of the way, as a backup, referenced by xuid
+os.system('tar xfj %smp.tar.bz2' % updatefolder)
+# copy xuid to the new log folder, as maxuid, so we have it for next time around
+os.system("cp %smaxuid mp/music/logs/maxuid" % updatefolder)
+# copy mysql backup also
+os.system("cp %smusic.mysql.dump mp/music.mysql.dump" % updatefolder)
+# copy logfile to new mp/logs/additions
+os.system("cp %s%s mp/music/logs/additions/%s" % (updatefolder,logfile,logfile)) 
+
+# force mp to add the local logs
+print "restarting"
+#os.system('umount /media/archive')  # NOT WORKING
+os.chdir(codefolder+"mp/music/code/")
+#os.system('./start') # restart the system
+subprocess.call('./start', shell=True) # restart the system
+print "adding logs"
+os.system('wget http://127.0.0.1:8088/1/add_logs') # suck in the log
+subprocess.call('./stop', shell=True) # stop the system
+# O/S manual umount of archive also not working if we leave mp running in a subprocess (or via os.system)
+
+print "update from %s completed - system restarted" % currentupdate

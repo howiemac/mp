@@ -1,0 +1,216 @@
+--- Page.py	(original)
++++ Page.py	(refactored)
+@@ -5,14 +5,14 @@
+ import random
+ import os
+ import sys
+-import urllib
++import urllib.request, urllib.parse, urllib.error
+ import types
+ import imghdr
+ import shutil
+ from copy import copy
+ from datetime import datetime
+ 
+-import vlc 
++from . import vlc 
+ from twisted.internet import reactor
+ 
+ from base.data import execute
+@@ -166,7 +166,7 @@
+       if req:
+         req.smartlist_error='invalid query: %s' % e
+       else:
+-        print "<<<< EXCEPTION >>>>", e
++        print("<<<< EXCEPTION >>>>", e)
+ #      raise
+     return sl
+ 
+@@ -458,7 +458,7 @@
+     for logfile in logfiles:
+       f=open(logfile,'r')
+       log=f.read().split('\n')
+-      print "LOG ITEMS=",len(log)
++      print("LOG ITEMS=",len(log))
+       validated=False
+       for i in log:
+         vals=i.split()
+@@ -480,7 +480,7 @@
+           when=DATE(date+" "+time)
+           if (act!='rated') and (not validated): # crude but reasonably effective... 
+             if self.Play.list(page=page,when=when,times=val): 
+-              print "duplicate log: %s" % (logfiles[ln],)
++              print("duplicate log: %s" % (logfiles[ln],))
+               fails+=1  
+               break
+             validated=True  
+@@ -502,12 +502,12 @@
+               pob.rating=val
+               pob.flush()
+             except:
+-              print "could not find page %s" % page
++              print("could not find page %s" % page)
+               pass # we don't care if the page no longer exists....
+       ln+=1
+  #   if  playuid:
+  #     self.set_scores(playuid)  # updates Pages based on Plays
+-    print "=== %s logs fetched successfully, %s log duplicates ignored ===" % (ln,fails)
++    print("=== %s logs fetched successfully, %s log duplicates ignored ===" % (ln,fails))
+     msg="%s logs processed, %s duplicates ignored" % (ln,fails)
+     return msg
+ 
+@@ -1043,7 +1043,7 @@
+ 
+   def mrl(self):
+     "get the audio file url ('media resource locator')"
+-    return unicode(self.file_loc(self.code))
++    return str(self.file_loc(self.code))
+ 
+   def get_index(self):
+     "return the index (within self.player.list) of the currently playing item"
+@@ -1187,7 +1187,7 @@
+     # VLC has a bug (when loop is not set) whereby if you skip the last track, it keeps playing it and then loops! - so we fix that
+     xuid=self.uid_now_playing()
+     xtime=self.transport.get_time()
+-    self.player.next() # tell the player to do the skip....
++    next(self.player) # tell the player to do the skip....
+     if self.player.mode!=1: #if not looping
+       if (xuid==self.uid_now_playing()) and (xtime<=self.transport.get_time()): #  we must be on the last track, so stop
+         self._stop()
+@@ -1249,7 +1249,7 @@
+   def get_track_data(self,path=""):
+     "returns a dict of track meta data"
+     filename=path or self.file_loc(self.code)
+-    media=vlc.Media(unicode(filename))
++    media=vlc.Media(str(filename))
+     media.parse()
+     d=[str(media.get_meta(i) or "") for i in range(17)]
+     length=media.get_duration()//1000
+@@ -1290,7 +1290,7 @@
+     if self.kind=='track':
+       xlen=self.length
+       filename=self.file_loc(self.code)
+-      media=vlc.Media(unicode(filename))
++      media=vlc.Media(str(filename))
+       media.parse()
+       self.length=media.get_duration()
+       if self.length!=xlen:
+@@ -1552,7 +1552,7 @@
+       else:
+         albums[tob.album]=[tob]
+     # process by album
+-    for album,tobs in albums.items():
++    for album,tobs in list(albums.items()):
+       ok=True
+       artist=tobs[0].artist
+       mob=None # album object (may be set below)  SHOULD IT NOT ALWAYS BE SET?????
+@@ -1580,7 +1580,7 @@
+       for tob in tobs:
+         url=tob.arturl
+         if url and (url!='None') and url.startswith("file"):
+-          path= urllib.url2pathname(url)[7:]
++          path= urllib.request.url2pathname(url)[7:]
+           if album: # add one image to the album
+             if mob and not mob.get_images():
+               mob.add_art(path,"500")
+@@ -1663,19 +1663,19 @@
+     """
+     error=False
+     if path:
+-      print "processing %s to %s" % (path,self.uid)
++      print("processing %s to %s" % (path,self.uid))
+       f=open(path,'r') 
+       filedata=f.read()
+       extension=(imghdr.what('',filedata) or path.rsplit(".")[-1].lower()).replace('jpeg','jpg')
+       if not filedata:
+         error= "NO IMAGE FOUND AT '%s'" % path
+-        print error
++        print(error)
+       elif extension in ('bmp','png'):
+         filedata=self.Image.convert(filedata)
+         extension='jpg'   
+       elif extension not in ('gif','png','jpg','jpeg'):
+         error="only JPEG, GIF, PNG, and BMP are supported"
+-        print error
++        print(error)
+       if not error:
+         # create a new image page
+         image=self.Image.new()
+@@ -1692,7 +1692,7 @@
+         # save the image file
+         image.save_file(filedata)
+         # return
+-        print 'image "%s" added' % image.code
++        print('image "%s" added' % image.code)
+         return image
+     return None
+ 
+@@ -1733,7 +1733,7 @@
+       if not os.path.exists(destfolder):
+         os.makedirs(destfolder)
+       shutil.copy2(source+subfolder+"/"+i.code,destfolder)
+-      print "added %s" % (dest+subfolder+"/"+i.code,)
++      print("added %s" % (dest+subfolder+"/"+i.code,))
+     return "clone completed: %s files added" % c
+ 
+   @classmethod
+@@ -1750,19 +1750,19 @@
+ #    source=req.source or "/media/howie/backup/howie/data/music/"
+ ##    source=req.source or "/media/howie/archive/data/music/" # DO NOT TRY ON EXFAT!!!!
+     # rename the source folder, and create dest folder (as the original source)
+-    print 'moving "music" folder to "xmusic"'
++    print('moving "music" folder to "xmusic"')
+     dest=copy(source)
+     source=source.replace("/music/","/xmusic/") # DODGY - will break if /music/ is duplicated in the path..
+     os.rename(dest,source)
+     # move the valid files to the original folder
+-    print "moving back the valid files..."
++    print("moving back the valid files...")
+     c=0
+     for i in self.list(isin={'kind':('file','image','track')},orderby="uid"):
+       c+=1
+       fn="%s/%s" % (i.file_folder(),i.code)
+-      print "keeping ",fn
++      print("keeping ",fn)
+       os.renames(source+fn,dest+fn)
+-    print "done: ",c, " files retained"
++    print("done: ",c, " files retained")
+     return "pare completed: %s files retained" % c
+ 
+ #  def move_plays(self,dt):
+@@ -1859,7 +1859,7 @@
+     ""
+     m=self.transport.get_media()
+     pos=self.player.list.index_of_item(m)
+-    print  "pos= %s" % pos
++    print("pos= %s" % pos)
+     return "pos= %s" % pos
+ 
+ 
+@@ -1941,9 +1941,9 @@
+        - then re-calculates all album and artist summary scores
+     """
+ #    if from_uid==1:     
+-    print "resetting scores to zero..."
++    print("resetting scores to zero...")
+     cls.list(asObjects=False,sql="update `%s`.pages set score=0" % cls.Config.database)
+-    print "adding play scores ..."
++    print("adding play scores ...")
+ #    for i in cls.Play.list(where= ("uid>=%s" % req.from_uid) if (req.from_uid>1) else ""):
+     for i in cls.Play.list():
+       try: 
+@@ -1953,11 +1953,11 @@
+ #      except Exception as e:
+ #        print "ERROR with ",i.page,' : ',e
+       except:
+-        print "deleting %s play(s) for missing track %s" % (i.times,i.page)
++        print("deleting %s play(s) for missing track %s" % (i.times,i.page))
+         i.delete() # delete invalid plays (presumably the track is already deleted)
+-    print "calculating summary scores"
++    print("calculating summary scores")
+     cls.fix_summary_scores(req)
+-    print "done"
++    print("done")
+     return "all scores reset from plays table"
+ 
+ #  pic_saved=add_art

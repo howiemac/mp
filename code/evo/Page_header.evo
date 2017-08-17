@@ -1,0 +1,54 @@
+# contentheader include for main pages 
+div: id='contentheader'
+  Page_header_start.evo
+  div:id='pagetitle'
+   div: id="pagetitleline"
+    Page_error.evo
+#    div: "VOLUME=%s" % self.transport.audio_get_volume() 
+
+#    # speaker
+#    # - click on speaker to show currently-playing tracks
+#    # - speaker will then light up
+#    # - speaker also shows on or off according to play/pause status
+#    paused=self.player.is_paused
+#    playing=self.transport.uid
+#    cob=self.get(playing or 1)
+#    lit = "_lit" if ((req.auto or paused) and (self.uid == playing)) else ""
+#    off = "off" if paused else ""
+#    span:
+#      img:src = "%s/images/speaker%s%s.png" % (self.theme_url(),off,lit),  id="speaker"
+
+    # title
+    paused=self.player.is_paused
+    playing= (self.uid==self.transport.uid)
+    span: cls='title %s' % ("hilite" if playing else "")
+#    span: cls='title %s'
+      req.title or self.get_name()
+#      if playing:
+#        img:src = "%s/images/speaker%s_lit.png" % (self.theme_url(),"off" if paused else ""),  id="speaker"
+
+
+    # nav options and search  
+#    if (self.kind not in ["album","track"]) or (not self.player.overviewing):
+    if (self.kind not in ["album","track","artist"]):
+#    if self.parent in (1,2):
+     Page_navigation.evo
+#    else:
+    # rating/score
+    span: id="rate-score"
+      "&nbsp;"
+      if self.kind in self.ratedkinds:
+       span: id='rate'
+        view="?view=auto" if req.auto else ""
+        rix=self.rating+4
+        a: self.rating_symbol(self.downratings[rix]), href=self.url("rate_down%s" % view), cls="popup title", title='rate down'
+        a: self.rating_symbol(), href=self.url('toggle_disable'), cls="%s title" % (self.rating<0 and "disabled" or "enabled"), title=(self.rating<0) and "enable" or "disable"
+        a: self.rating_symbol(self.upratings[rix]),  href=self.url("rate_up%s" % view), cls="popup title plus", title='rate up'
+      if self.kind in ("track","album","artist"):      
+       span: id='score'
+        a: self.score_symbol(), href=self.url("play_history"),cls="big", title='%s %splays' % (self.score,"track " if self.kind!="track" else "")
+    # play, stack, shuffle, and loop buttons
+#    if self.uid not in (self.transport.uid,self.player.list and self.player.list.uid or 0):
+   div:
+    Page_inline_transport.evo 
+Page_header_end.evo

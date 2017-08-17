@@ -1,0 +1,27 @@
+# album overview
+#Page_player_polling.evo
+images=self.get_images()
+if images:
+ imob=images[0]
+ a: href=self.url('toggle_view'), id="album-overview-image" 
+  img: src=imob.file_url(), style="float:right;"+imob.autostyle()
+  #position:fixed; top:0; left:0"
+div:id='overview' 
+ div:id='overviewtext'
+  Page_header.evo
+  div: id="content"
+   Page_album_text_header.evo
+   table:style="height:100%; padding-right:20px; vertical-align:middle", cls="subtle"
+    for track in self.get_children_by_kind('track'):
+     ok= track.rating >= track.minrating()
+     state='enabled' if ok else 'disabled'
+     tr:cls='light hilite' if (track.uid==self.transport.uid) else 'light', style="height:32px"
+      td:track.seq or "", cls="disabled wee"
+      td:cls=state
+       a:track.name, href=track.url()
+      td:cls="light wee"
+       track.display_length()
+      td:cls=state
+       track.rating_symbol()
+      td:cls="%s wee" % state
+       track.score_symbol()

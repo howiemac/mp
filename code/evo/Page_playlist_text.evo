@@ -1,0 +1,13 @@
+# page info include for kind=="playlist"
+# give parent for normal playlists and smartlists
+if self.parent>2:
+ Page_parent_link.evo
+# error or list
+if req.smartlist_error:
+ div: req.smartlist_error, id='error' 
+else:
+ if self.kind=='smartlist':
+  # header info for smartlist..
+  div: self.get_smart_playlist(req,info=True), cls='light wee' 
+  br:
+ Page_playlist_table.evo

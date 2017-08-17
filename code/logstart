@@ -1,0 +1,2 @@
+# gives standard EVOKe request logs
+twistd -y logserve.py

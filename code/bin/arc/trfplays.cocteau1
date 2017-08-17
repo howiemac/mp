@@ -1,0 +1,65 @@
+#! /usr/local/bin/python
+#
+# script to create log (trf.log) to transfer plays from old versions of tracks to new versions
+#
+# expects "trfs" list of old / new tracks, one per line, in format: old, new, plays
+
+trfs="""
+1762 1751 51
+1763 1752 49
+1764 1753 74
+1765 1754 45
+1766 1755 38
+1767 1756 41
+1768 1757 10
+1769 1758 37
+1770 1759 48
+1771 1760 44
+
+1844 1833 27
+1845 1834 23
+1846 1835 25
+1847 1836 10
+1848 1837 23
+1849 1838 11
+1850 1839 7
+1851 1840 9
+1852 1841 5
+1853 1842 18
+
+1796 1785 65
+1797 1786 55
+1798 1787 62
+1799 1788 66
+1800 1789 35
+1801 1790 115
+1802 1791 3
+1803 1792 48
+1804 1793 68
+1805 1794 74
+
+1878 1867 65 
+1879 1868 26
+1880 1869 66
+1881 1870 25
+1882 1871 100
+1883 1872 20
+1884 1873 117
+1885 1874 3
+1886 1875 36
+1887 1876 21
+
+"""
+
+trflog=[]
+for t in trfs.split("\n"):
+  ts=t.strip()
+  if ts: # ignore blank lines
+    old,new,plays=ts.split()
+    trflog.append("%s played at 01/01/2014 00:00:01 -%s" % (old,plays))
+    trflog.append("%s played at 01/01/2014 00:00:01 %s" % (new,plays))
+f=open('trf.cocteau1.log','w')
+f.write("\n".join(trflog))
+f.close()
+
+print "trf.log created"

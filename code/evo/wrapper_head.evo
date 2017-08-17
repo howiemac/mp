@@ -1,0 +1,22 @@
+# non-bootstrap standard wrapper head
+head:
+ link: rel="stylesheet", type="text/css" , media="screen" ,href="/site/css/app.css"
+ link: rel="stylesheet", type="text/css" , media="screen" ,href="/site/theme/theme.css"
+ TITLE=req.user.get_HTML_title(self,req)
+ title:TITLE 
+ meta: equiv="Content-Type", content="text/html; charset=utf-8"
+ meta: equiv="Reply-to", content=self.Config.mailto
+ meta: name="title", content=TITLE
+ meta: name="description", content=self.Config.meta_description
+ meta: name="keywords", content=self.Config.meta_keywords
+ meta: name="author", content="Ian Howie"
+ meta: name="copyright", content="Ian Howie"
+ meta: name="ROBOTS", content="INDEX,FOLLOW"
+ meta: name="creation-date", content=lib.DATE()
+ meta: name="revisit-after", content="7 days"
+
+# if req.refresh:
+#  script:"location.reload(true)"
+#  meta: equiv="refresh", content="0; URL=%s" % self.url() 
+#  meta: equiv="refresh", content="0; URL=http://127.0.0.1:8088%s" % self.url() 
+#  meta: equiv="refresh", content="0"

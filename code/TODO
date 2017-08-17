@@ -1,0 +1,183 @@
+* why do many images have a "composer" of a slash followd by the parent uid ????
+
+*** auto playlist for default when there is no play order:
+ - use A1 playlist and filter
+ - blend in some random choices (per filter) 
+
++++ versions: see below
+
+*** annual charts (for tracks, artists, albums)
+
+*** all-time charts for albums
+ - CANNOT USE SMARTLIST FOR THIS AS IT ASSUMES kind==track (and it currently makes no sense for a playlist to include an artist or album)
+ - but: artists page aleady gives this list (when sorted by score - the default)
+ - so: give albums page in similar format (instead of current cover display) - give this its own uid 5 (moving 5 -Aaliyah - to first free uid)?
+ 
+
+** when a track has no genre(s) of its own, use the album genre, when selecting tracks for genre-based playlists 
+
+* deletion of files with no code ref : write a "pare" function in Page.py (linux specific, using mv) 
+  - see also "batch clean-up script..." as per below...
+  - go through each data file and check whether it exists as code column for Page of that uid:
+    - if non-existant, move that file (and its path) to a ~/data/music.deletes folder 
+
+* transport should have a mimimal version (pause and skip only)
+
+
+slave (pullmp)
+--
+* BUG pullmp breaks for data copy where folder does not exist (next will be /012)
+    - --parents does not work (cp complains about needing a directory)
+    So - use whatever I am using in pushmp...
+
+
+VERSIONS: separate physical file versions from their meta data (ie the existing page kinds)
+==
+(currently applies to tracks,images, & files)
+
+Objectives:
+  - allows edited/updated files to replace the existing ones, under new uids, without affecting the uids (and thereby links to) the existing kinds  
+  - allows multiple versions of tracks/images (eg hi res / low res, vinyl / cd)  
+  - allows multiple use of one file (eg same track being used in multiple albums)
+  - simplifies copying and moving of these kinds
+
+Approach:
+  - new "version" kind, similar to "file" kind, but used also for images and tracks
+  - allow images, files, and tracks to have child versions  
+  - code field for image, file, or track stores current version name (which will be identical to the code of a version, if there are any versions) 
+    OR - use ref field to link to current version uid (better, I think), and stop using code field (except in versions, or where there is no version)
+  - when an original is replaced by a version, also create a version for that original image/file/track, which will point to the original file
+    - NOTE: there is no longer any dependable relationship between uids and codes, so:
+      - store data path (ie the bit after data/music/) in code (breaks previous independence of path from data => less flexible, but should be ok...) 
+      - identify current version by matching code
+    - ALTERNATIVE: make versions mandatory, creating a version for every existing file/image/track
+      - allows existing uid/filename relationship to be retained...
+      - bulk move script is required to fix existing data folders (costly with archive, due to shitty MS file system...)  
+  - allow code (or ref ?) field to point to ANY version of that kind, enabling:
+   - easy copying of meta data, without copying the version-file
+   - links, ie different meta data for same version, eg:
+     - an image being used in 2 or more different pages
+     - one track being used in 2 or more different albums (thereby can create compilation albums in place of dumb-playlists) 
+      - add a 'tracklink' kind - make it point (via code column) to the existing track file
+        - can have its own name
+        - but will not duplicate all of the track info - instead, in displays, simply link to the track
+      - OR - if we want to modify the track data for the copy, make the new one of kind 'track' also, and copy it from the existing one 
+        - eg "Are you sleeping' can point to "Surf's Up", but with its own text and start and stop times, etc 
+      - IMPORTANT: if original track is then updated, those copies that refer to its file must be updated simultaneously. 
+     NOTE: must not allow deletion of any version that is referenced from elsewhere (even if original parent is deleted):
+       REALLY, NOTHING SHOULD EVER BE DELETED, EXCEPT BY A GENERIC CLEAN-UP ADMIN PROCESS
+
+
+ADMIN
+###################################
+
+new file replacement routines (images, files, audio)
+==
+(objective: to make the db into a  WORM - no direct file replacement or manual deletion) 
+- add the new file
+- make "code" of the old point to the replacement file
+  - now we have two rows referencing the same file: the original (now modified) row should be flagged as 'updated' (rating=-5)
+    - don't allow any "updated" row to be newly referenced or altered
+    - any use of this old row (for its code link) should result (how??) in the reference to it being replaced with the new row uid
+      - so, over time, use of the old will decline
+  - make the old a child of the new? (so that it doesn't come up on eg 'parent=album.uid' searches)
+- batch clean-up script to periodically compare code entries with physical files, to identify unreferenced files for removal/archive
+  - the db rows should be kept (as they may be referenced in text elsewhere) 
+- ensure that all code uses the code column to get the filename (should be okay aready..... but check)
+  
+
+
+
+BASE SYSTEM
+==
+- page edit buttons:
+  - ditch the separate Image and File classes/objects - make them all pages 
+  - image move
+  - link (link to an image)
+  - image links from - currently mp is using composer to hold the url (urg)
+- remove sections altogether
+  - patch: append existing sections to page
+    - where section starts :HTML, make it end with a line ":", meaning :EVO (back to evo!)
+      - parse to allow mixed ':HTML' and ':' sections
+  - remove all sections code, including that to split a page into sections  (redo that to split it onto spearate pages?)
+- remove cells altogether 
+- reference images and files in text as [1234]  (where 1234 is the image or file uid), rather than by parent/child relationship
+- paging - make limit configurable
+- search - page results 50 at a time
+
+
+WOULD BE NICE
+##################################
+
+playlists
+==
+- use prefs rather than text to define smart playlist
+- use prefs rather than text to store dumb playlist
+- use text simply to give text etc. about the playlist 
+- disable the existing connection between playlists/smartlists selection and their own ratings
+
+- deletion of lines in a dumb playlist
+- allow reordering with arrows
+- "save as" option on root playlist, to save the play order to a named dumb playlist ? (so playist can be created using 'playnext' buttons)
+  - or else, allow a dumb playlist to be chosen in place of play order for adding 'playnext' items?
+  - CAN THE STANDARD COPY FACILITY NOT BE MADE TO DO THIS? - see copy/move above...
+
+zero dates
+==
+- Can I change 06/03/2014 dates to be "zero dates" in some way? Make DATE() do this?
+- show 1/1/2005 (plus 1 second?)  as 2005, show 1/1/2005 (plus 2 seconds) as Jan 2005, and show 1/2/2005 (plus 1 second) as Feb 2005 (same for subsequent months),  
+
+save state
+==
+(shuffle is already saved and restored)
+- extend this to continue playing where we left off (using goto() to play the playlist from part-way through)
+
+track position
+==
+- clickable visual display of track??? (use transport.set_position)
+
+schema
+==
+- consider renaming composer column to "source" (images use this for parent url link)
+
+store quality?
+==
+- store quality (density) as a column, so we can sort by quality 
+  - once set, will not change
+  - key (hence a column)
+  - quality = size/length
+  - size is not needed ?
+  - script to get quality (via size) for every existing track  
+
+
+artists
+==
+- add all non-album artists as artist records???- maybe use a different parent to distinguish them?
+OR ELSE: remove all artists (and their albums) with no more than 2 tracks - moving the tracks to Various Artists untitled 
+
+sundry
+==
+- posted date ?
+
+system transfer future stragtegy
+==
+- consider use of git to handle merge and sync
+
+charts with plays taper ?
+ - admin preference for plays (popularity) calculations (speed of tapering away of old plays) 
+   - sensitive (fast) - 16%/month 100%,84%,71%,59%,50%,42%,35%,30%,25%,20%,17%,14%,12%         (88%/yr)
+   - responsive (med) - 8%/month  100%,92%,85%,78%,72%,66%,61%,56%,51%,47%,43%,40%,37% DEFAULT (63%/yr)
+   - smooth (slow) - 4%/month     100%,96%,92%,88%,85%,82%,79%,76%,73%,70%,67%,64%,61%         (39%/yr)
+   - glacial   - 2%/month         100%,98%,96%,94%,92%,90%,88%,87%,85%,83%,82%,80%,78%         (22%/yr)
+ - suck it and see!
+ - do this only to calculate charts - not to calculate score
+
+
+
+suggested code reorg
+==
+~/bin - for mp startup script  (as it is now)
+~/lib/mp - for code
+~/var/mp - for data
+
+

@@ -1,0 +1,7 @@
+# album listing
+#Page_player_polling.evo
+Page_header.evo
+div: id="content"
+  #the following is fed by req.pages ...
+  Page_child_pages.evo
+Page_footer.evo

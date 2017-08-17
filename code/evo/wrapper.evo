@@ -1,0 +1,16 @@
+# non-bootstrap standard wrapper
+"<!DOCTYPE html>"
+html:
+    wrapper_head.evo
+    body: id=req.pageid or 'standardbody'
+        script: src="/site/base/js/jquery.js"
+        script: src="/site/base/js/jquery.autosize.js"
+        script: src="/site/base/js/base.js"
+        script: src="/site/js/app.js"
+#        Page_player_polling.evo
+        div: id="pagesize"
+            wrapper_error.evo
+            content.here
+        # add breaks to allow page to scroll above footer transport display
+        br:
+        br:

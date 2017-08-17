@@ -1,0 +1,24 @@
+# include for Page_view.evo
+# add sub-page
+if not req.user.as_guest():
+ div:cls="summary"
+  form: action=self.url("add_page"),cls='addpageform'
+    if self.name=='genres':
+       select: name='kind', id='textaddkind'
+         option:"new genre", value="smartlist", selected='selected'
+       input: name='name', value=req.get('name',''),id='textadd'
+       buttoncool:'create'
+    else:
+     # special selection criteria for musickinds
+     if (self.kind in self.validchildkinds):
+       kinds=self.validchildkinds[self.kind]
+     else:
+       kinds= ['page']  
+     if kinds:
+       select: name='kind', id='textaddkind'
+         for kind in kinds:
+           option:"new %s" %  kind, value=kind, selected=kind==req.kind and "selected" or ""
+       input: name='name', value=req.get('name',''),id='textadd'
+       buttoncool:'create'
+    #/form
+# O/S view children/descendents?

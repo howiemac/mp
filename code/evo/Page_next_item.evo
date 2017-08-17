@@ -1,0 +1,35 @@
+# next item ###################################################
+div:id="next_nav", cls="wee"
+  # get next and prev objects
+  if req.auto or (self.player.is_paused==self.uid):
+    # show last track played, and next up
+    t=self.transport
+    next=self.get(t.nextuid) if t.nextuid else None
+    prev=self.get(t.prevuid) if t.prevuid else None
+  else:
+    order=self.get_pob().get_pref('order_by')
+    if order=='title':
+      next=self.get_next_alphabetical_item()
+      prev=self.get_previous_alphabetical_item()
+    elif order=='seq':
+      next=self.get_next_seq_item()
+      prev=self.get_previous_seq_item()
+    else: 
+      # i.e. order by date (same for latest)
+      next=self.get_newer_item()
+      prev=self.get_older_item()
+  # display the links
+  act="edit" if (req.edit==self.uid) else ""
+  kind=self.kind
+  if next: 
+    div:id='next_item'
+     a:href=next.url(act),title=("next %s" % kind)
+      span:next.get_name()
+      span:"&raquo;"
+      span:"" if next.artist==self.artist else (" - by %s" % next.artist)
+  if prev: 
+    div:id='prev_item'
+     a:href=prev.url(act),title=("previous %s" % kind)
+      span:"&laquo;"
+      span:prev.get_name()
+      span:"" if prev.artist==self.artist else (" - by %s" % prev.artist)

@@ -1,0 +1,34 @@
+# header ##################################
+Page_header.evo
+# content ###################################################################### 
+div: id="content", cls="%s_content" % self.kind
+ # preferences ############################## 
+ form: action=self.url("update_prefs"), cls="bigform", id="prefs_form"
+  fieldset:
+   legend:'preferences'
+   for name,defn in sorted(self.default_prefs[self.kind].items()):
+    dl:
+     dt:
+      label:defn[1]+':', for_id="prefs_%s" % name
+     dd:
+      if defn[2]=='checkbox':
+       input: type='checkbox', id="prefs_%s" % name, name=name, checked=self.get_pref(name) and 'checked' or '',value='Y'
+      elif isinstance(defn[2],tuple):
+       select: id="prefs_%s" % name, name=name
+        for opt in defn[2]:
+         # ADDED
+#         optsym= (name in ('min_rating','max_rating') and self.rating_symbol(lib.safeint(opt)) or opt)
+         optsym= (name=='min_rating') and self.rating_symbol(lib.safeint(opt)) or opt
+         # MODIFIED
+         option: optsym, value=opt, selected=opt==self.get_pref(name) and 'selected' or '',
+         # END OF ADDED
+      else:
+       input: id="prefs_%s" % name, name=name, value=self.get_pref(name) or '', size=defn[2] or '', maxlength=defn[2] or ''
+  div: cls='bigacts'
+   buttonhot:'update'
+#/form
+ form: action=self.url()
+   buttoncool:'cancel'
+
+
+     

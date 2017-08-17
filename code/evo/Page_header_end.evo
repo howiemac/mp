@@ -1,0 +1,12 @@
+# this should be included for all pages with contentheader
+#
+# page tabs
+#big:req.page or "NONE"
+if (not (self.player.overviewing or req.user.as_guest())) and self.get_pageoptions(req):
+ div:id='pageoptions'
+  ul:
+   for (label,url,hint) in req.pageoptions:
+    if label:
+     li:cls="tab%s" % (url.rsplit('/',1)[-1].startswith(req.page or ' ') and " selected" or "",)
+      a:label, href=url, title=hint, page=req.page, nam=url.rsplit('/',1)[-1]
+ 

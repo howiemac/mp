@@ -1,0 +1,6 @@
+# overridden to explicitly show error message and return user.welcome()
+div: id='content'
+ div: id="pagetitleline"
+   Page_error.evo
+   form:action=req.user.url("welcome")
+     buttonhot:"ok" 

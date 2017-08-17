@@ -1,0 +1,25 @@
+# navigation links and search
+theme=self.theme_url()
+#overviewing=self.player.overviewing and self.kind in ('album','track')
+#if not overviewing:
+span: id="navigation"
+  p=self.get(3)
+  a: 'artists', href=p.url(), title="artists"
+  "-"
+  a: 'albums', href=self.get(2).url("albums"), title="albums"
+  "-"
+  a: 'playlists', href=self.list(name='playlists',parent=1)[0].url(), title="playlists"
+  "-"
+  a: 'genres', href=self.list(name='genres',parent=1)[0].url(), title="genres"
+  "-"
+  a: '&starf;', href=p.url("chart"), title="charts"
+  "-"
+  a: href=p.url("add_music"), title="additions"
+   b: '+'
+  "-"
+  a: 'log', href=p.url("recent"), title= 'recently played' 
+  span: id="searchform"
+    form: action=req.user.abs_url("search")
+      input: name="searchfor", value="search", onfocus="searchFocus(this)", onblur="searchBlur(this)", onkeyup="searchChange(this)", onchange="searchChange(this)", alt="search"
+      button:cls="cool", disabled="disabled", id='gobutton', title="find"
+       img: src="%s/images/search-32.png" % theme

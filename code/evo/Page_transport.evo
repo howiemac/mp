@@ -1,0 +1,102 @@
+# transport, global controls and filters
+theme=self.theme_url()
+span: id="transport"
+  if self.player.list:
+    Page_player_polling.evo
+
+  # play order
+  span: id="playorder-button"
+      src= self.player.list and self.player.list.uid or 0
+      lit = "_lit" if (self.uid in (1,src)) else ""
+      source = (src and lit and self.uid==1)
+      a: href = self.get(src).url("auto") if source else self.get(1).url()
+       button: accesskey="L", title=(self.player.list and ("source" if source else "play order") or "")
+        img: src="%s/images/playorder%s.png" % (theme,lit)
+
+  # speaker
+  # - click on speaker to show currently-playing tracks
+  # - speaker will then light up
+  # - speaker also shows on or off according to play/pause status
+  if self.player.list:
+   span: id="speaker"
+    playing = self.transport.uid
+#    # allow for nothing playing..
+    cob=self.get(playing or 1)
+#    # speaker display
+    lit = "_lit" if ((req.auto or self.player.is_paused) and (self.uid == playing)) else ""
+    off = "off" if self.player.is_paused else ""
+    a: href = cob.url('' if lit else "auto?over=1")
+     button: accesskey="P", title="show what is playing"
+      img:src = "%s/images/speaker%s%s.png" % (theme,off,lit),  id="speaker"
+
+  # transport panel
+  span: id="transport-panel"
+    if self.player.list:
+      # pause / resume
+      form: action=self.url('pause'), id="pause"
+       act= "resume" if self.player.is_paused else "pause"
+       button: accesskey=' ',title=act
+        img:src="%s/images/%s.png" % (theme,act)
+    else:
+      # autoplay
+      form: action=self.get(self.player.autolist).url('auto'), id="pause"
+       button: accesskey=' ',title="autoplay"
+        img:src="%s/images/autoplay.png" % (theme,)
+    if self.player.list:
+      # previous (skip back)
+      form: action=self.url('skipback')
+       button:accesskey=",", title='skip back'
+        img:src="%s/images/previous.png" % theme
+
+      # back
+      form: action=self.url('backward')
+       button:title='back'
+        img:src="%s/images/backward.png" % theme
+
+      # track time remaining / elapsed
+      #   note: tracktime is refreshed by ajax polling per Page_player_polling.evo
+      form: action="/", id='tracktimeform'
+       button: title="toggle time display", id='tracktime'
+        self.tracktime(req)
+      # AJAX request to do the toggle
+      script:
+        '$( "#tracktimeform" ).submit(function( event ) { event.preventDefault(); $.post("%s")})' % self.url('toggle_time_display')
+
+      # forward
+      form: action=self.url('forward')
+       button:title='forward'
+        img:src="%s/images/forward.png" % theme
+        #, width="20px", height="23px"
+
+      # next (skip)
+      title="skip to next track" if self.next_up() else "skip to end"
+      form: action=self.url('skip')
+       button:accesskey=".", title=title
+        img:src="%s/images/next.png" % theme
+
+      # stop
+      form: action=self.url('stop')
+       button:title='stop'
+        img:src="%s/images/stop.png" % theme
+
+    # end of transport-panel
+
+#  # logo
+#  span: id="mplogo"
+#    span: "mp vlc&nbsp;"
+
+
+
+  # filter
+  span: id="filtersymbols"
+    rootrat=self.get(1).rating
+    for rat in [-4,0,1,2]:
+     cls="enabled" if rootrat<=rat else "disabled"
+     tit= "allow all tracks" if rat==-4 else "ignore tracks rated below %s" % self.rating_symbol(rat)
+     a:self.rating_symbol(rat), href=self.url("set_global_filter?rating=%s" % rat), title=tit, cls=cls
+
+  # mode
+  span: id='viewsymbols', cls='big'
+    mode=getattr(self.player,"overviewing",False)
+    a:href=self.url("toggle_view"), title="%s" % (mode and "edit" or "view2",)
+     img:src="%s/images/mode_%s.png" % (theme,"edit" if mode else "view")

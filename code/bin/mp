@@ -1,0 +1,4 @@
+#! /bin/sh
+cd ~/code/grace.7/music/code
+./devstart
+

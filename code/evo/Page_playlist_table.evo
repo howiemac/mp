@@ -1,0 +1,71 @@
+# an include for showing track listings - expects a list of track pages in req.data
+div:
+#  span: "INDEX=%s" % req._pl_index
+#  span: "START=%s" % req._pl_start
+  if '_pl_back' in req:        
+    a:"back...", href=self.url("view?_pl_start=%s" % req._pl_back)
+  jumpable=self.player.list and self.kind=="root"
+#  jumpable=self.kind=="root"
+  chart=req._pl_chartkind
+  albums= (chart=="album chart")
+  artists= (chart=="artist chart")
+  table: cls='subtle'
+   tr: cls='head'
+    if jumpable:
+      td:""
+    td:'#'
+    td:'%s %s' % (req._pl_len, (artists and "artists") or (albums and "albums") or "tracks")
+    td:'?'
+    if not chart:
+      td:'&star;'
+    if not artists:
+      td:'by'
+      if not albums:
+        td:'from'
+    td:'plays' if chart else (self.length and self.display_length() or "")
+   stripe="stripe" 
+   n=lib.safeint(req._pl_start)
+   for tob in req.data:
+    alob=tob.get_pob()
+    stripe=(not stripe) and "stripe" or ""
+    if tob:
+     active= (lib.safeint(req._pl_index)==n) if "_pl_index" in req else False
+     able="disabled" if tob.rating<0 else "enabled"
+     color="hilite" if active else stripe
+     mark='*' if req.additions and tob.uid in req.additions else ''
+     tr:cls="%s %s" % (able,color)
+      if jumpable:
+        td:
+          if not active:
+            a:"&rArr;",href=self.url('goto?index=%s' % n), title="jump to here"
+      td: "%s%s" % (n+1,mark), cls='wee'
+      # name
+      td:
+       a:href=tob.url(), title=tob.name
+        tob.name or "(untitled)"
+      # rating  
+      td:tob.rating_symbol(), cls='wee'
+      # score
+      if not chart:
+        td:tob.score_symbol(), cls='wee'
+      # by
+      if not artists:
+       td:
+        aob=alob.get_pob()
+        a:href=aob.url(), title=aob.name
+         tob.artist
+       # from
+       if not albums:
+        td:
+         a:href=alob.url(), title=alob.get_name()
+          alob.get_name()
+      # plays
+      td: cls='wee', style='text-align:right'
+       if chart:
+         a:tob.plays , href=tob.url("play_history") 
+       else:
+         span: tob.display_length()
+    n=n+1
+div:
+  if req._pl_more:
+    a:"more...", href=self.url("view?_pl_start=%s" % req._pl_more)

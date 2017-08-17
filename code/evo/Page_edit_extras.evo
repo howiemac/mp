@@ -1,0 +1,45 @@
+# additional data field edits
+if self.kind in ('track','album','smartlist'):
+ table:id='extras',cls='subtle', style='width:100%'
+  # artist, composer, and seq for tracks and smartlists and albums (except compilation albums)
+  tr:
+    td:
+     label:"artist",for_id='artist',cls='wee light'
+    td:style='width:90%'
+     input: id="artist",  cls="big", name='artist', value=self.artist, onChange="confirmExit = true;", onKeyPress="confirmExit = true;", style='width:95%'
+  if self.kind=='track':
+   tr:
+    td:
+     label:"composer",for_id='composer',cls='wee light'
+    td:
+     input: id="composer",  cls="big", name='composer', value=self.composer, onChange="confirmExit = true;", onKeyPress="confirmExit = true;", style='width:95%'
+   tr:
+    td:
+     label:"track #",for_id='tracknum',cls='wee light'
+    td:
+     input: id="tracknum",   name='seq', value=self.seq, onChange="confirmExit = true;", onKeyPress="confirmExit = true;", style='width:10%'
+  # tags  - for albums, tracks, smartlists
+  tr:
+   td:
+    label:"genres",for_id="tag1",cls="wee light"
+   td: style='width:90%'
+    n=0
+    tagnames=['']+self.get_tagnames()
+    tags=self.get_tags()
+    if self.get_pob().name!='genres':
+      tags.extend(['',''])
+    for i in tags:
+     n=n+1
+     select: id="tag%s" % n, name="tag%s" % n
+      for opt in tagnames:
+        option: opt, value=opt, selected=opt==i and 'selected' or ''
+  # date - for albums and tracks
+  if self.kind!='smartlist':
+   tr:
+    td:
+     label:"date",for_id="when", cls="wee light"
+    td:
+     input: id='when', name='when', value=self.when, onChange="confirmExit = true;",onKeyPress="confirmExit = true;", style='width:20%'
+     if self.kind=='album':
+      label:"update track dates", for_id='trackdates', cls='wee light'
+      input:type='checkbox', id='trackdates', name='trackdates', value='Y', onChange="confirmExit = true;", onKeyPress="confirmExit = true;"     

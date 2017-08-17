@@ -1,0 +1,61 @@
+# page info include for kind='track' 
+pob=self.get_pob()
+div:cls='big'
+# artist
+ a: self.artist or pob.get_pob().get_name(), href=pob.get_pob().url(), cls='huge'
+ br:
+# album
+ a:pob.get_name(), href=pob.url()
+ if self.seq:
+  span:'#%s' % self.seq, cls='wee'
+ br:
+ br:
+
+## rating/score
+#span: id="rate-score"
+#  "&nbsp;"
+#  if self.kind in self.ratedkinds:
+#   span: id='rate'
+#    auto=req.auto and "?view=auto" or ""
+#    a: '-', href=self.url("rate_down%s" % auto), cls="popup title", title='rate down'
+#    a: self.rating_symbol(), href=self.url('toggle_disable'), cls="%s title" % (self.rating<0 and "disabled" or "enabled"), title=(self.rating<0) and "enable" or "disable"
+#    a: '+',  href=self.url("rate_up%s" % auto), cls="popup title plus", title='rate up'
+#   span: id='score'
+#    a: self.score_symbol(), href=self.url("play_history"),cls="big", title='%s plays' % self.score
+
+# info
+div:
+ # when
+ span: self.when , cls="light"
+ "-"
+ # tags
+ tags=self.get_tags()
+ if tags:
+   span: ' / '.join(tags), cls='light'
+ "-"
+ # length
+ span: self.display_length(format=""), cls="light"
+ "-"
+ # filename
+ a: href=self.url("view_filedata"), title="show audio track data" 
+   span: self.code, cls="light"
+ br:
+ br:
+if self.composer:
+ div:cls="wee"
+  span: "composed by:"
+  span: self.composer
+  br:
+  br:
+## get audio file data from vlc
+#div:
+# data=self.get_track_data()
+# if 'arturl' in data:
+#  img: src=data['arturl'], height='300',width='300',style='float:right'
+# for (k,v) in data.items(): 
+#  if k!='arturl':
+#   div: "%s: %s" % (k,v)
+# br:
+self.text.formatted(req)  
+br:
+br:

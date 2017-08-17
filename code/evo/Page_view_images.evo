@@ -1,0 +1,19 @@
+# inclusion to display  images
+if self.uid!=3 and not (self.kind=="artist" and (req.pagenext!=req.pagesize)):
+ for image in self.get_images():
+  target="" 
+  # ADDED
+  if req.user.as_guest(): 
+   if self.kind in ('track','album'):
+    href=self.url('toggle_view%s' % ("?method=auto" if req.auto else "",))
+   else:
+    href=image.file_url()
+    target="_blank"
+  else:
+   href=self.url("add_image?edit=%s" %  image.uid)
+  title=image.name
+#  target="_blank" if href.startswith('http') else ""
+  a:href=href, title=title, cls="image_%s image_%s" % (image.get_pos(),image.get_size()),  style=image.get_anchor_width_style(), target=target 
+   img:src=image.image_or_thumb_url(), alt=image.code, style=image.get_image_width_style()
+   if image.name:
+    span:image.name, cls='wee light'

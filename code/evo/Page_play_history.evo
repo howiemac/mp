@@ -1,0 +1,24 @@
+# page info include for kind='track' 
+Page_header.evo
+# get audio file data from vlc
+h3: "play history"
+# - %s => %s" % (self.score, self.score_symbol())
+plays=self.Play.sum("times",page=self.uid, where="times>0") or "no"
+#skips=abs(lib.safeint(self.Play.sum("times",page=self.uid,where="times<0"))) or "no"
+div:"%s plays" % plays, cls='big'
+br:
+#div:"score: %s" % self.score
+#cite:"skips show as negative plays"
+#br:
+table:cls="subtle"
+#  tr:
+#    th:'when'
+#    th:'what'
+  for i in self.Play.list(page=self.uid, orderby='uid desc'):
+    tr:
+      td:i.when.time()
+      what=i.times>0 and 'played' or 'skipped'
+      td:"%s %s" % (what,abs(i.times)>1 and ("* %s" % i.times) or "")
+br:
+div:
+ a: "back", href=self.url()   

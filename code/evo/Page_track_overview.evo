@@ -1,0 +1,14 @@
+# track overview
+#Page_player_polling.evo
+images=self.get_images()
+if images:
+ imob=images[0]
+ a: href=self.url('toggle_view%s' % ("?method=auto" if req.auto else "",))
+  img: src=imob.file_url(), style="float:right;"+imob.autostyle()
+div: id='overview'
+ div:id='overviewtext'
+  Page_header.evo
+  div:id='content'
+   Page_track_text.evo
+#   Page_next_item.evo
+

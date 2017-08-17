@@ -1,0 +1,14 @@
+# meta data for a track - from the audio file via vlc 
+Page_header.evo
+# get audio file data from vlc
+h3: "meta data from the audio file %s:" % self.code
+div:
+# if req.data.get('arturl') and req.data['arturl']<>"None":
+#  img: src=req.data['arturl'], height='300',width='300',style='float:right'
+ for (k,v) in sorted(req.data.items()): 
+#  if k!='arturl':
+   div: "%s: %s" % (k,v)
+ br:
+ br:
+div:
+ a: "back", href=self.url()   

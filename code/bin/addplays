@@ -1,0 +1,35 @@
+#! /usr/local/bin/python
+#
+# script to create log (add.log) to add plays from now deleted tracks to new versions
+#
+# expects "adds" list tracks / plays, one per line, in format: track plays
+
+adds="""
+668 1
+669 3
+672 1
+673 4
+674 36
+675 9
+676 2
+677 6
+678 2
+679 2
+680 2
+681 2
+682 2
+683 3
+684 3
+"""
+
+addlog=[]
+for t in adds.split("\n"):
+  ts=t.strip()
+  if ts: # ignore blank lines
+    track,plays=ts.split()
+    addlog.append("%s played at 01/01/2014 00:00:01 %s" % (track,plays))
+f=open('add.beatles1.log','w')
+f.write("\n".join(addlog))
+f.close()
+
+print "add.log created"

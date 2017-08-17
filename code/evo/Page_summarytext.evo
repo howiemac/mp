@@ -1,0 +1,37 @@
+# override include for Page_child_pages.evo 
+
+ok= (self.rating >= min(0,self.minrating()))
+
+#Page_summaryimage.evo
+div:cls='summarytext'
+  state='enabled' if ok else 'disabled'
+  if self.kind in ('album','track'):
+  # and self.get_pob().parent==4:
+   div:"by %s" % self.artist, cls=state
+   br:
+  # extra text #
+  if self.kind in ('album','track'):
+   div:
+    span: self.when , cls="wee light"
+    tags=self.get_tags()
+    "-"
+    span: self.display_length(format=""), cls="wee light"
+    if tags:
+     "-"
+     span: ' / '.join(tags), cls='wee light'
+    "-"
+    span: self.code, cls="wee light"
+   if self.composer:
+    div:
+     span:"composed by", cls='tiny %s' % state 
+     span:self.composer, cls='wee %s' % state  
+  # text summary #
+  if ok:
+    if self.kind=='playlist':
+      span: "%s tracks" % len(self.text.split('\n')), cls='wee %s' % state   
+    elif self.kind=='smartlist':
+      span: self.get_smart_playlist(req,info=True), cls='light wee %s' % state 
+    else:
+      span: self.text.summarised(req,chars=1000,lines=8),cls='wee %s' % state        
+      if (self.text.has_more or self.has_children()):
+        a:'more...', cls='wee %s' % state, href=self.url('context')

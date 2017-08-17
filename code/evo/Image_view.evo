@@ -1,0 +1,17 @@
+div: id='contentheader'
+ div:id='pagetitle'
+  "image"
+  h1:self.code, cls="huge"
+ div:id='pageinfo',cls='light wee' 
+  'from' 
+  page=self.get_pob() 
+  a:page.get_name(),href=page.url()
+div: id='content' 
+  if self.get_page().edit_permitted(req.user):
+   a:href=self.url('edit'), title="edit image"
+    img: cls="imagesolo",src=self.file_url(), alt=self.name
+  else: 
+   img: cls="imagesolo", src=self.file_url(), alt=self.name
+  div:self.name
+div:
+ a: "...back", href=self.get_pob().url()
