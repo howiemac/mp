@@ -2401,7 +2401,7 @@ class Media(_Ctype):
         except ValueError:
             # Media not parsed, no info.
             return None
-        tracks = ( contents[i].contents for i in range(len(contents)) )
+        tracks = ( content.contents for content in contents )
         # libvlc_media_tracks_release(mediaTrack_pp, n)
         return tracks
 
