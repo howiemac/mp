@@ -3,6 +3,7 @@ MUSIC app local override of base.serve.twist (Twisted interface)
 
 This silences the logs and avoids gzipping (makes no sense in localhost context).
 """
+import os
 
 from twisted.application import internet
 from twisted.web import server
@@ -30,6 +31,12 @@ def start(application, apps=[]):
     port = int(list(dispatcher.apps.values())[0]['Config'].port)
     evokeService = internet.TCPServer(port, fileServer)
     evokeService.setServiceParent(application)
+
+    # create log dir if necessary
+    try:
+        os.mkdir('../logs')
+    except OSError:
+        pass
 
     # logging
     logfile = DailyLogFile("twistd.log", "../logs")
