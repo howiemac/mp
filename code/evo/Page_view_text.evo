@@ -5,14 +5,14 @@ div:cls='text'
  elif self.kind=='track':
   Page_track_text.evo
  elif self.kind=='album':
-  Page_album_text.evo  
+  Page_album_text.evo
  elif self.kind=='artist':
   if req.pagenext==req.pagesize:
-   Page_artist_text.evo  
+   Page_artist_text.evo
  elif self.kind=='artists':
   for i in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
    span:
-    a:"&nbsp;%s&nbsp;" % i , href=self.url("view?match=%s&limit=500" % i), title="artists starting with "+i 
+    a:"&nbsp;%s&nbsp;" % i , href=self.url("view?match=%s&limit=500" % i), title="artists starting with "+i
  else:
+  Page_parent_link.evo
   self.text.formatted(req)
-        
