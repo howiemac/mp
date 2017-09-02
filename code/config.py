@@ -14,7 +14,7 @@ thumb_size=200
 meta_description="music player, VLC, music database" #site description text for search engines
 meta_keywords="music, VLC" #comma separated list of keywords for search engines
 
-from base.data.schema import *
+from evoke.data.schema import *
 
 class Page(Schema):
   table='pages'

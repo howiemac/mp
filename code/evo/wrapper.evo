@@ -3,9 +3,9 @@
 html:
     wrapper_head.evo
     body: id=req.pageid or 'standardbody'
-        script: src="/site/base/js/jquery.js"
-        script: src="/site/base/js/jquery.autosize.js"
-        script: src="/site/base/js/base.js"
+        script: src="/site/evoke/js/jquery.js"
+        script: src="/site/evoke/js/jquery.autosize.js"
+        script: src="/site/evoke/js/evoke.js"
         script: src="/site/js/app.js"
 #        Page_player_polling.evo
         div: id="pagesize"

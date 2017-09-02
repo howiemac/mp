@@ -1,5 +1,5 @@
 """
-music library override class for base.page 
+music library override class for evoke.page 
 """
 
 import random
@@ -16,11 +16,11 @@ from datetime import datetime
 import vlc 
 from twisted.internet import reactor
 
-from base.data import execute
-from base.render import html
-from base.serve import Req
-from base.lib import *
-from base.Page import Page as basePage
+from evoke.data import execute
+from evoke.render import html
+from evoke.serve import Req
+from evoke.lib import *
+from evoke.Page import Page as basePage
 
 ## for temp/testing only
 #from musicmeta import meta
@@ -294,7 +294,7 @@ class Page(basePage):
   
   
   def get_images(self):
-    "enhance base.Page.py - so that track with no images inherits from album, and album from artist"
+    "enhance evoke.Page.py - so that track with no images inherits from album, and album from artist"
     images=basePage.get_images(self)
     if not images and self.kind in ('track','album'):
       pob=self.get_pob()
@@ -345,14 +345,23 @@ class Page(basePage):
       for t in newtags:
         self.add_tag(t)# add the tag
       for tob in oldtags:
-        tob.delete()      
-  
-  def delete(self,req):
-    "when deleting a page, first delete the associated tags"
-    for t in self.Tag.list(page=self.uid):
-      t.delete()
-    return basePage.delete(self,req)
-  
+        tob.delete()
+
+    def delete_branch(self):
+        """override of evoke Page.py branch deletion, to include tag deletion
+         - deletes self and ALL child pages of any kind (the whole branch!)
+         - deletes all related tags also
+        """
+        for p in self.get_branch():
+            if p.kind == 'image':
+                self.get(p.uid).delete_image()
+            else: 
+                # delete related tags
+                for t in self.Tag.list(page=p.uid):
+                    t.delete()
+                # delete page 
+                p.delete()
+
   # ratings + disable/enable ################
   
   downratings=(-4,-4,-3,-2,-4,0,1)

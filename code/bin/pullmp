@@ -4,7 +4,7 @@
 # - pulls <= archive
 #   - current (master) max uid (retained for use in next update)
 #   - last update max uid  is checked against slave record, to ensure that we are in sync on the prior update
-#   - latest mp code (in full, incuding base)
+#   - latest mp code (in full, incuding evoke)
 #   - latest music SQL dump (in full)
 #   - data additions since last update
 # - pushes => archive

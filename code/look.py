@@ -8,6 +8,6 @@ sys.path.insert(1,os.path.abspath('../..'))
 from .config_site import domains
 
 #start up
-from base.serve import Dispatcher
+from evoke.serve import Dispatcher
 dispatcher = Dispatcher()
 globals().update(dispatcher.apps[domains[0]])

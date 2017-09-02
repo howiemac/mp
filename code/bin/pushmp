@@ -10,7 +10,7 @@
 #   - current (master) max uid (retained for use in next update - see "last update max uid" below)
 #   - last update max uid  (slave will checked this against its own record, to ensure that we are in sync on the prior update) 
 #   - latest music SQL dump (in full)
-#   - latest mp code (in full, incuding base)
+#   - latest mp code (in full, incuding evoke)
 #     - renames master log, so as not to be accidentally reused by slave
 #   - data additions since last update
 #

@@ -1,5 +1,5 @@
 """
-MUSIC app local override of base.serve.twist (Twisted interface)
+MUSIC app local override of evoke.serve.twist (Twisted interface)
 
 This silences the logs and avoids gzipping (makes no sense in localhost context).
 """
@@ -10,8 +10,8 @@ from twisted.web import server
 from twisted.python.log import ILogObserver, FileLogObserver
 from twisted.python.logfile import DailyLogFile
 
-from base.serve import Dispatcher
-from base.serve.twist import LongSession, EvokeResource, application
+from evoke.serve import Dispatcher
+from evoke.serve.twist import LongSession, EvokeResource, application
 
 class SilentSite(server.Site):
     def log(self, request):

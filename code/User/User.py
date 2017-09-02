@@ -1,9 +1,9 @@
-""" overrides for evoke base User object
+""" overrides for evoke User object
 
     auto login as admin, no security checking
 """
 
-from base.User import User as baseUser
+from evoke.User import User as baseUser
 
 class User(baseUser):
 
