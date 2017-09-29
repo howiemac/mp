@@ -96,7 +96,7 @@ span: id="transport"
      a:self.rating_symbol(rat), href=self.url("set_global_filter?rating=%s" % rat), title=tit, cls=cls
 
   # mode
-  span: id='viewsymbols', cls='big'
+  span: id='viewsymbols'
     mode=getattr(self.player,"overviewing",False)
     a:href=self.url("toggle_view"), title="%s" % (mode and "edit" or "view2",)
      img:src="%s/images/mode_%s.png" % (theme,"edit" if mode else "view")

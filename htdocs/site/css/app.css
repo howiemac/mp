@@ -1,28 +1,26 @@
-@import "default.css";
-@import "layout.css";
+@import "grace.css";
 
 button{
 cursor:pointer;
 }
 
-/*#main {
- margin:60px 0px 0px 0px;
-}*/
-
 #contentheader{
 margin:0 0 0 0;
 }
 
+#chartkind{
+margin-left: 1em;
+}
 
 #next_nav {
 }
 
-#next_item {
+#next_item{
 float:right;
 }
 
 #next_item, #prev_item {
-padding: 0 5px 0 0;
+padding: 0 0.5em 0 0;
 }
 
 #pagetitle{
@@ -30,14 +28,23 @@ display:inline;
 }
 
 #pagetitleline{
-padding:5px 0 0 0;
+padding:0.5em 0 0 0;
 }
 
 .intransport{
 display:inline-block;
 }
 .intransport img{
-height:16px;
+height:1.5em;
+}
+
+.intransport form{
+margin:0;
+}
+
+.intransport button{
+padding:0;
+border:none;
 }
 
 #childpages .intransport {
@@ -48,41 +55,24 @@ vertical-align:middle;
 #rate-score{
 float:right;
 display:inline-block;
-margin-right:20px;
+margin-right:2em;
 }
 #score{
 vertical-align:10%;
 }
 
 
-/*
-#controls{
-margin-top: 70px;
-}
-*/
-
-
-
-
 #transport {
  position:fixed;
- bottom:0px;
- left:0px;
- margin:10px 0 0 0;
- padding:2px;
+ bottom:0;
+ left:0;
+ margin:0 0 0 0;
+ padding:0.2em;
  z-index:100;
-/* width:100%;*/
-/* width:210px;*/
 }
 
-
-
-#transport button {
-/* height:24px; */
-}
-
-#transport form, button, img{
-  border:solid 0px;
+#transport form, #transport button, #transport img{
+  border:solid 0;
   padding:0;
   margin:0;
 }
@@ -92,41 +82,29 @@ margin-top: 70px;
 }
 
 #transport-panel img, #playorder-button img{ 
-/*#transport-panel img{*/
-height:24px;
+height:2em;
 }
-/*
-#pause img{
-  padding: 0 6px;
-}
-*/
-
 #tracktime {
 vertical-align:15%;
-width:80px;
+width:3em;
 font-size:170%;
 margin:0;
 } 
 
-#speaker,#speakerinline {
-/* margin-bottom:-4px; */
+#filtersymbols{
+padding: 0 0.5em;
+}
+#filtersymbols a{
+font-size:1.6em;
 }
 
 #viewsymbols img{
-height:22px;
-padding: 0px 5px;
+height:2em;
 }
 
 #mplogo {
 vertical-align:super;
 }
-
-/*
-#tracktimeform button:hover{
-background: url(/site/theme_dark/images/pause-24.png) top no-repeat;
-} 
-*/
-
 
 #navigation {
 float:right;
@@ -137,50 +115,20 @@ vertical-align:super;
 }
 
 
-#searchform input {
-width: 200p;
-margin:0px;
-padding:1px;
-font-size:18px;
-}
-#gobutton {
-/*vertical-align:top;*/
-width:auto;
-height:auto;
-/*font-size: 12px;*/
-margin:0 10px 0 0;
-}
-
-#gobutton img{
-vertical-align:bottom;
-width:20px;
-}
-
 
 .title {
 font-size: 200%;
 }
 
-/*
-.row:after,.summary:after,#controls:after,#content:after,.section:after, #upperbody:after,#torso:after,#controls:after,#main:after{
-clear: none;
- }
-*/
-/*
-.super {
-vertical-align:super;
-}
-*/
-
 /*generic messages*/
 
 #message, #warning, #error {
-padding: 2px;
+padding: 0.2em;
 margin: 0;
  }
 
 /* browser compatibility fixes */
 
-button::-moz-focus-inner { margin: -1px; padding: 0; border-width: 1px; }
+/*button::-moz-focus-inner { margin: -1px; padding: 0; border-width: 1px; }*/
 
 /* #extras {width:70%;}*/

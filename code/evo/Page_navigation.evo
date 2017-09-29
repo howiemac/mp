@@ -21,5 +21,5 @@ span: id="navigation"
   span: id="searchform"
     form: action=req.user.abs_url("search")
       input: name="searchfor", value="search", onfocus="searchFocus(this)", onblur="searchBlur(this)", onkeyup="searchChange(this)", onchange="searchChange(this)", alt="search"
-      button:cls="cool", disabled="disabled", id='gobutton', title="find"
+      button: disabled="disabled", id='gobutton', title="find"
        img: src="%s/images/search-32.png" % theme

@@ -253,9 +253,8 @@ color:#DDD;
 text-decoration:none;
 }
 #pageoptions .selected a, #pageoptions .selected {
-border-bottom: 2px solid #000;
+border-bottom: 0.2em solid #000;
 }
-
 
 #contents a {
 color: #09F
