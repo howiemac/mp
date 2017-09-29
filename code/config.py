@@ -36,6 +36,7 @@ class Page(Schema):
   composer=TAG
   score=INT
   length=INT  # length in milliseconds
+  version=TEXT,KEY
 
   insert=[
     dict(uid=1,parent=1,name='mp vlc',kind='root',lineage="."),

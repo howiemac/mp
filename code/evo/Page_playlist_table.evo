@@ -7,6 +7,7 @@ div:
   jumpable=self.player.list and self.kind=="root"
 #  jumpable=self.kind=="root"
   chart=req._pl_chartkind
+  tracks= (chart=="chart")
   albums= (chart=="album chart")
   artists= (chart=="artist chart")
   table: cls='subtle'
@@ -62,7 +63,10 @@ div:
       # plays
       td: cls='wee', style='text-align:right'
        if chart:
-         a:tob.plays , href=tob.url("play_history") 
+         if tracks:
+           a:tob.plays , href=tob.url("play_history") 
+         else:
+           span: tob.plays
        else:
          span: tob.display_length()
     n=n+1

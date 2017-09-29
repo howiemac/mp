@@ -1950,6 +1950,33 @@ class Page(basePage):
     print("done")
     return "all scores reset from plays table"
 
+  def extract_version(self):
+    "one-off script to extract version information from and album or track and put it in version field"
+    if self.kind not in ['album','track']:
+      return False
+    lines=self.text.split('\n')
+    text=[]
+    self.version=""
+    for l in lines:
+      if (not self.version) and (l.lstrip()[0:2]=='* '): #likely version info
+        self.version=l.strip()[2:]
+        print('got version for ', self.kind, self.uid, ' : ', self.version)
+      else:
+        text.append(l)
+    if self.version:
+      self.text='\n'.join(text)
+      self.flush()
+    return True
+
+  def extract_versions(self,req):
+    "one-off script to extract version information from albums and tracks and put it in version field"
+#    self.get(13914).extract_version()
+    for i in self.list(isin={'kind':['album','track']}):
+      i.extract_version()
+    req.message='versions extracted'
+    return self.view(req)
+
+
 #  pic_saved=add_art
 
 #  def get_pics(self,req):
@@ -1958,7 +1985,7 @@ class Page(basePage):
 #    '''
 #    req.error="DISABLED"
 #    return self.view(req)
-# 
+#
 #    root=self.get(3)
 #    count=0
 #    for artist in root.get_children():

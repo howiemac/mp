@@ -20,3 +20,9 @@ div:
 #  span: "%s track plays" % self.score, cls="light"
   br:
   br:
+if self.version:
+ div: id='version', cls='wee'
+  span: 'version:'
+  span: self.version
+  br:
+  br:

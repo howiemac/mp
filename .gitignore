@@ -1,0 +1,4 @@
+*.pyc
+__pycache__
+code/twistd.pid
+code/config_site.py

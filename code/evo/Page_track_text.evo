@@ -42,9 +42,15 @@ div:
  br:
  br:
 if self.composer:
- div:cls="wee"
+ div:id='composer', cls="wee"
   span: "composed by:"
   span: self.composer
+  br:
+  br:
+if self.version or pob.version:
+ div: id='version', cls='wee'
+  span: 'version:'
+  span: self.version or pob.version
   br:
   br:
 ## get audio file data from vlc
@@ -57,5 +63,3 @@ if self.composer:
 #   div: "%s: %s" % (k,v)
 # br:
 self.text.formatted(req)  
-br:
-br:

@@ -54,7 +54,7 @@ background-color:#000;
 color:#4B4;	
 }
 
-strong {
+#version {
 color:#BB0;
 }
 
@@ -300,9 +300,6 @@ height:16px;
 .popup{
 color:#000;
 }
-
-
-
 
 
 /* spurious theme additions - the following is from default.py but with different theme path to force a refresh */

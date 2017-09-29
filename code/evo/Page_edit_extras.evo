@@ -42,4 +42,11 @@ if self.kind in ('track','album','smartlist'):
      input: id='when', name='when', value=self.when, onChange="confirmExit = true;",onKeyPress="confirmExit = true;", style='width:20%'
      if self.kind=='album':
       label:"update track dates", for_id='trackdates', cls='wee light'
-      input:type='checkbox', id='trackdates', name='trackdates', value='Y', onChange="confirmExit = true;", onKeyPress="confirmExit = true;"     
+      input:type='checkbox', id='trackdates', name='trackdates', value='Y', onChange="confirmExit = true;", onKeyPress="confirmExit = true;"
+  if self.kind in ['album','track']:
+   tr:
+    td:
+     label:"version",for_id='version',cls='wee light'
+    td:
+     textarea: id="version",  cls="norm", name='version', onChange="confirmExit = true;", onKeyPress="confirmExit = true;", style='width:95%'
+       self.version 
