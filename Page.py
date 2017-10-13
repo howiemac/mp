@@ -885,7 +885,7 @@ class Page(basePage):
   def albums(self,req):
     "album listing by score or whatever"
     prefob=self.get(2) # preferences for this are stored in page 2
-    limit=page(req,20)
+    limit=page(req)
     req.pages=self.list(kind='album',where='rating>=%s' % self.minrating(),orderby=prefob.get_order(),limit=limit)
     req.title=req.page="albums"
 #    print ">>>>>>>>>>>>>>>>>", req.page, req.pagesize, len(req.pages)

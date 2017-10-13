@@ -31,7 +31,7 @@ for item in req.pages:
 #     span: "%s" % item.score, cls="light wee"
      item.Page_summarytext.evo
 if req.page and (len(req.pages) == req.pagesize):
-  div:cls="summary"
+  div:id="more"
    a:"more...",cls='big',href=self.url('%s?pagenext=%s' % (req.page,req.pagenext))
  
    

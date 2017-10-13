@@ -30,11 +30,11 @@ class Page(Schema):
   seq=INT,KEY
   rating=INT
   prefs=TEXT
+  score=INT
 
 # EXTRA FIELDS START HERE
   artist=TAG,KEY
   composer=TAG
-  score=INT
   length=INT  # length in milliseconds
   version=TEXT,KEY
 

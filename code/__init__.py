@@ -1,5 +1,0 @@
-"""
-evoke app.code module 
-
-"""
-
