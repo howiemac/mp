@@ -1,0 +1,77 @@
+h1, h2, h3, h4, h5, h6 { 
+font-weight:normal;
+}
+
+h1, h2, .title {
+  color: #09F; 
+ }
+
+#transport, #transort button, #speaker {
+ background-color: #CCC;
+ color: #333
+}
+
+#tracktimeform button{
+ background-color: #CCC;
+ color:#000;
+}
+
+
+#dspeaker {
+background-color: #FF0;
+}
+
+
+#rate a, #rate a:hover, #score a, #score a:hover {
+text-decoration: none;
+}
+
+#rate a.enabled {
+color:#F00;
+}
+
+#score a {
+color:#BB0;
+}
+
+
+#rate a:hover{
+color:#F44;
+}
+#rate a.plus:hover{
+color:#4F4
+}
+
+
+.popup{
+color:#FFF;
+}
+
+.disabled, .disabled td, .disabled th, .disabled a {
+color:#999;
+}
+
+
+.hilite td, .hilite th, .hilite a{
+color:#09F;
+}
+
+/*
+#rate a.enabled {
+color:#880;
+}
+*/
+
+
+
+/* spurious theme additions - the following is from default.py but with different theme path to force a refresh */
+
+#pageoptions li {background: url(/site/theme_light/tabs/tab_br.jpg) top right no-repeat transparent;}
+#pageoptions li a {background: url(/site/theme_light/tabs/tab_bl.jpg) top left no-repeat transparent;}
+#pageoptions li:hover {background: url(/site/theme_light/tabs/tab_brh.jpg) top right no-repeat ;}
+#pageoptions li a:hover {background: url(/site/theme_light/tabs/tab_blh.jpg) top left no-repeat ;}
+#pageoptions .selected a:hover {background: url(/site/theme_light/tabs/tab_bl.jpg) top left no-repeat;}
+#pageoptions .selected:hover{background: url(/site/theme_light/tabs/tab_br.jpg) top right no-repeat;}
+
+/* end of spurious theme additions */
+
