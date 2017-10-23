@@ -1,0 +1,14 @@
+# album track list summary
+div: cls='summarytracks'
+ table:style="height:100%; padding-right:20px; vertical-align:middle", cls="subtle"
+  for track in self.get_minrated_children_by_kind('track'):
+    tr:cls='light', style="height:32px"
+      td:track.seq or "", cls="disabled wee"
+      td:cls="enabled"
+       a:track.name, href=track.url()
+      td:cls="light wee"
+       track.display_length()
+      td:cls="enabled"
+       track.rating_symbol()
+      td:cls="%s enabled wee"
+       track.score_symbol()

@@ -1,15 +1,19 @@
 # override include for Page_child_pages.evo 
 
-ok= (self.rating >= min(0,self.minrating()))
+#ok= (self.rating >= min(0,self.minrating()))
 
 # one thumbnail image  # 
-div:cls='summaryimage'
-  if ok:
+div: cls='summaryimage'
+#  if ok:
    image=self.get_image()
    if image:
-    a:title=image.name, href=self.url(), cls="image_left image_thumb", style=image.get_image_width_style('thumb')
-     img:src=image.thumb_url(), alt=image.code, style=image.get_image_width_style('thumb')
+    a:title=image.name, href=self.url(), cls="image_left"
+#    a:title=image.name, href=self.url(), cls="image_thumb", style=image.get_image_width_style('thumb')
+#     img:src=image.thumb_url(), alt=image.code, style=image.get_image_width_style('thumb')
+     if self.player.overviewing:
+       img:src=image.file_url(), alt=image.code, style="width:250px"
+     else:
+       img:src=image.thumb_url(), alt=image.code, style="width:200px"
 #    a:title=image.name, href=self.url(), cls="image_left", style="width:250px"
-#     img:src=image.file_url(), alt=image.code, style="width:250px"
 #    if image.name:
 #      span:image.name, cls='wee light'

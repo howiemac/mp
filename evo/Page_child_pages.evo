@@ -1,31 +1,38 @@
 # include for Page_view_form.evo 
 for item in req.pages:
-  ok=(item.rating >= self.minrating())
-  state='enabled' if ok else 'disabled'
+#  ok=(item.rating >= self.minrating())
+#  state='enabled' if ok else 'disabled'
   a:name=item.uid
   div: id="childpages", cls= "summary articles"
    # image #
    if req.page in ('view','albums'):
      item.Page_summaryimage.evo
-   # title  #
-   if self.kind == 'album' and item.seq and item.kind == 'track': 
-    span:"%s:" % item.seq, cls='light'
-   act="edit" if req.edit==self.uid else ""
-   a:href=item.url(act)
-    span:item.get_name(), cls="big %s" % state 
-   # track length
-   if item.kind in self.playablekinds:
-    if item.kind == "track":
-     span: item.display_length(), cls='light wee'
-    # rating
-    span: item.rating_symbol(), cls=state
-    # score
-    if item.kind in ("artist","album","track"):
-     span: item.score_symbol(), cls='%s wee' % state
-    # inline transport
-    if ok:
-     "&nbsp;"
-     item.Page_inline_transport.evo
+#   # for artists, show album track listings
+#   if self.kind=='artist':
+#     item.Page_summarytracks.evo
+   # title
+   item.Page_summaryheader.evo
+   # inline transport
+   item.Page_inline_transport.evo
+
+#   if self.kind == 'album' and item.seq and item.kind == 'track': 
+#     span:"%s:" % item.seq, cls='light'
+#   act="edit" if req.edit==self.uid else ""
+#   a:href=item.url(act)
+#     span:item.get_name(), cls="big %s" % state 
+#   if item.kind in self.playablekinds:
+#     # track length
+#     if item.kind == "track":
+#       span: item.display_length(), cls='light wee'
+#     # rating
+#     span: item.rating_symbol(), cls=state
+#     # score
+#     if item.kind in ("artist","album","track"):
+#       span: item.score_symbol(), cls='%s wee' % state
+#     # inline transport
+#     if ok:
+#       "&nbsp;"
+#       item.Page_inline_transport.evo
    # text, for view pages only  #
    if req.page in ('view','albums'):
 #     span: "%s" % item.score, cls="light wee"

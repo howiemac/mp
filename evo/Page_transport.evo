@@ -25,7 +25,8 @@ span: id="transport"
 #    # speaker display
     lit = "_lit" if ((req.auto or self.player.is_paused) and (self.uid == playing)) else ""
     off = "off" if self.player.is_paused else ""
-    a: href = cob.url('' if lit else "auto?over=1")
+#    a: href = cob.url('' if lit else "auto?over=1")
+    a: href = cob.url('' if lit else "auto")
      button: accesskey="P", title="show what is playing"
       img:src = "%s/images/speaker%s%s.png" % (theme,off,lit),  id="speaker"
 

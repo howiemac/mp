@@ -2,7 +2,7 @@
 div:
 #  span: "INDEX=%s" % req._pl_index
 #  span: "START=%s" % req._pl_start
-  if '_pl_back' in req:        
+  if '_pl_back' in req:
     a:"back...", href=self.url("view?_pl_start=%s" % req._pl_back)
   jumpable=self.player.list and self.kind=="root"
 #  jumpable=self.kind=="root"

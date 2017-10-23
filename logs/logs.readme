@@ -1,6 +1,0 @@
-twisted logs are stored here, as are play logs for mp
-
-the additions folder is for new play logs from slave clones:
-- these are added to the master database by calling the /add_log method from a browser
-- once added they are moved into the main logs directory
-- all logs in the main logs directory are essentially disposable, as plays are recorded in the mysql database

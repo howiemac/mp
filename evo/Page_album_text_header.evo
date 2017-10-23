@@ -1,17 +1,17 @@
 # page info include for kind='album' 
 div:
- pob=self.get_pob()
- a: href=pob.url()
-  big:self.artist or pob.get_name()
- br:
- br:
+  pob=self.get_pob()
+  a: href=pob.url()
+    big:self.artist or pob.get_name()
+  br:
+  br:
 #if not self.player.overviewing:
- tags=self.get_tags()
- if tags:
-   div: 
-     span: ' / '.join(tags), cls='light'
-     br:
-     br:
+  tags=self.get_tags()
+  if tags:
+    div: 
+      span: ' / '.join(tags), cls='light'
+      br:
+      br:
 div:
   span: self.when , cls="light"
   "-"
@@ -21,8 +21,8 @@ div:
   br:
   br:
 if self.version:
- div: id='version', cls='wee'
-  span: 'version:'
-  span: self.version
-  br:
-  br:
+  div: cls='version wee'
+    span: 'version:'
+    span: self.version
+    br:
+    br:

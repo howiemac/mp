@@ -783,11 +783,11 @@ class Page(basePage):
     - forces a stop when playlist is finished, and returns to playlist page
     - if already stopped, will start autoplay when self is the default autoplay playlist
 
-    - req.over - if True, forces overview mode
+#    - req.over - if True, forces overview mode
     - sets req.auto to the currently playing track
     """
-    if req.over:
-      self.player.overviewing=True # allow forcing of overview
+#    if req.over:
+    self.player.overviewing=True # allow forcing of overview
     if self.player.is_playing():
       # get currently playing track object, and store the uid in self.transport.uid"
       self.set_transport_uids(self.uid_now_playing())
@@ -861,12 +861,19 @@ class Page(basePage):
   def album_overview(self,req):
     ""
 #    req.wrapper="wrapper_subtle.evo"
-  
+
+  @html
+  def artist_overview(self,req):
+    ""
+    req.data=self.get_artist_playlist
+
   def overview(self,req):
     "track/album overview"
     if not self.player.overviewing: # ensure that we are in the correct mode...
       return self.toggle_view(req)
-    if self.kind=='album': # fetch the album
+    if self.kind=='artist': # fetch the artis
+      return self.artist_overview(req)  
+    elif self.kind=='album': # fetch the album
       return self.album_overview(req)  
     elif self.kind=='track': # fetch the track
       return self.track_overview(req)
@@ -1222,7 +1229,8 @@ class Page(basePage):
     else:
       self.player.mode=1 #vlc.PlaybackMode.loop
     self.player.set_playback_mode(self.player.mode)
-    return self.redirect(req,"auto")
+#    return self.redirect(req,"auto")
+    return self.redirect(req)
 
   def repeat(self,req):
     "toggle repeat mode (to loop/unloop a single track)"
@@ -1275,7 +1283,7 @@ class Page(basePage):
 
   def set_length(self):
     '''set length for self, if relevant (i.e. a track or an album or a playlist)
-    SLOW for tracks - this is why we store length separately  
+    SLOW for tracks - this is why we store length separately
     '''
     if self.kind=='track':
       xlen=self.length
@@ -1967,17 +1975,6 @@ class Page(basePage):
       self.text='\n'.join(text)
       self.flush()
     return True
-
-  def extract_versions(self,req):
-    "one-off script to extract version information from albums and tracks and put it in version field"
-#    self.get(13914).extract_version()
-    for i in self.list(isin={'kind':['album','track']}):
-      i.extract_version()
-    req.message='versions extracted'
-    return self.view(req)
-
-
-#  pic_saved=add_art
 
 #  def get_pics(self,req):
 #    '''

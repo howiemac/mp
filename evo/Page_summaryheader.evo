@@ -1,0 +1,23 @@
+# title include for Page_child_pages.evo
+
+ok=(self.rating >= self.minrating())
+state = 'enabled' if ok else 'disabled'
+playable = self.kind in self.playablekinds
+
+# name
+div:
+    if self.kind == 'track' and self.seq:
+      span:"%s:" % self.seq, cls='light'
+    a:href=self.url()
+      span:self.get_name(), cls="norm %s" % state
+    if playable:
+      # details
+      span:
+        # track length
+        if self.kind == "track":
+          span: self.display_length(), cls='light wee'
+        # rating
+        span: self.rating_symbol(), cls=state
+        # score
+        if self.kind in ("artist","album","track"):
+          span: self.score_symbol(), cls='%s wee' % state

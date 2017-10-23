@@ -21,7 +21,7 @@ if self.kind in self.playablekinds:
      form:action=self.url("playnext")
       input:type="hidden",name="return_to",value=req.return_to
       button: title="play next"
-       img:src="%s/images/playlist.png" % theme
+       img:src="%s/images/add.png" % theme
     # loop
     if playing and self.kind=="root":
      form: action=self.url('loop')
