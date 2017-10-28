@@ -8,14 +8,6 @@
 
 +++ versions: see below
 
-*** annual charts (for tracks, artists, albums)
-
-*** all-time charts for albums
- - CANNOT USE SMARTLIST FOR THIS AS IT ASSUMES kind==track (and it currently makes no sense for a playlist to include an artist or album)
- - but: artists page aleady gives this list (when sorted by score - the default)
- - so: give albums page in similar format (instead of current cover display) - give this its own uid 5 (moving 5 -Aaliyah - to first free uid)?
- 
-
 ** when a track has no genre(s) of its own, use the album genre, when selecting tracks for genre-based playlists 
 
 * deletion of files with no code ref : write a "pare" function in Page.py (linux specific, using mv) 
