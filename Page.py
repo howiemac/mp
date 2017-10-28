@@ -1397,10 +1397,12 @@ class Page(basePage):
     period,start,end,prior=self.get_chart_period(req)
     todate='' if prior else 'to date'
     if period>9999:
-      date=DATE(period*100+1)
+#      date=DATE(period*100+1)
       req.title=f"{req.alltime} {req._pl_chartkind} for {date.datetime.strftime('%B')} {period//100} {todate}"
+    elif req.alltime and (period==(int(DATE())//10000)):
+      req.title=f"{req.alltime} {req._pl_chartkind}"
     else:
-      date=DATE(period*10000+101)
+#      date=DATE(period*10000+101)
       req.title=f"{req.alltime} {req._pl_chartkind} for {period} {todate}"
     raw=self.list(asObjects=False,sql=self.sql)
     # process the raw data, so it is ready for the template

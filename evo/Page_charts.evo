@@ -28,11 +28,11 @@ div: id='contentheader'
 #  span: "%s plays" %
   span: id="chartkind"
     if req._pl_chartkind!="chart":
-      a:"tracks",href=self.url("chart?period=%s" % req.period)
+      a:"tracks",href=self.url(f"chart?period={req.period}{alltime}")
     if req._pl_chartkind!="album chart":
-      a:"albums",href=self.url("album_chart?period=%s" % req.period)
+      a:"albums",href=self.url(f"album_chart?period={req.period}{alltime}")
     if req._pl_chartkind!="artist chart":
-      a:"artists",href=self.url("artist_chart?period=%s" % req.period)
+      a:"artists",href=self.url(f"artist_chart?period={req.period}{alltime}")
     if req._pl_chartkind!="charts summary":
       a:"summary",href=self.url("charts_summary")
   if summary:
