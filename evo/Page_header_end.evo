@@ -9,4 +9,4 @@ if (not (self.player.overviewing or req.user.as_guest())) and self.get_pageoptio
     if label:
      li:cls="tab%s" % (url.rsplit('/',1)[-1].startswith(req.page or ' ') and " selected" or "",)
       a:label, href=url, title=hint, page=req.page, nam=url.rsplit('/',1)[-1]
- 
+

@@ -5,21 +5,37 @@ div: id='contentheader'
   div: id="pagetitleline"
     Page_error.evo
     Page_navigation.evo
-    # title 
+    # title
     span: cls='title'
      req.title
-#    Page_inline_transport.evo 
+#    Page_inline_transport.evo
   Page_header_end.evo
-  method=req._pl_chartkind.replace(" ","_")
-  a:"previous", href=self.url('%s?month=%s' % (method,req._pl_prevmonth))
-  if req._pl_nextmonth:
-    a:"next", href=self.url('%s?month=%s' % (method,req._pl_nextmonth))
-#  span: "%s plays" % 
+  summary=req._pl_chartkind=="charts summary"
+  if not summary:
+    method=req._pl_chartkind.replace(" ","_")
+    alltime=f"&alltime={req.alltime}" if req.alltime else ""
+    a:"previous", href=self.url(f'{method}?period={req._pl_prevperiod}{alltime}')
+    if req._pl_nextperiod:
+      a:"next", href=self.url(f'{method}?period={req._pl_nextperiod}{alltime}')
+    if req.period>9999:
+      a:"annual", href=self.url(f'{method}?period={req.period//100}{alltime}')
+    if req.period<9999:
+      a:"monthly", href=self.url(f'{method}?period={req.period*100+12}{alltime}')
+    if req.alltime:
+      a:"periodic", href=self.url(f'{method}?period={req.period}')
+    else:
+      a:"all-time", href=self.url(f'{method}?period={req.period}&alltime=all-time')
+#  span: "%s plays" %
   span: id="chartkind"
     if req._pl_chartkind!="chart":
-      a:"tracks",href=self.url("chart?month=%s" % req.month)
+      a:"tracks",href=self.url("chart?period=%s" % req.period)
     if req._pl_chartkind!="album chart":
-      a:"albums",href=self.url("album_chart?month=%s" % req.month)
+      a:"albums",href=self.url("album_chart?period=%s" % req.period)
     if req._pl_chartkind!="artist chart":
-      a:"artists",href=self.url("artist_chart?month=%s" % req.month)
-  Page_playlist_table.evo
+      a:"artists",href=self.url("artist_chart?period=%s" % req.period)
+    if req._pl_chartkind!="charts summary":
+      a:"summary",href=self.url("charts_summary")
+  if summary:
+    Page_charts_summary.evo
+  else:
+    Page_playlist_table.evo

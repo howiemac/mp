@@ -1335,53 +1335,73 @@ class Page(basePage):
             - req._pl_chartkind: the type of chart
             - req._pl_index - index of currently playing song (if relevant)
             - req._pl_len - number of items
-            - req._pl_start - index of start of display items 
-            - req._pl_prevmonth as integer year/month eg 201410
-            - req._pl_nextmonth ditto
+            - req._pl_start - index of start of display items
+            - req._pl_prevperiod as integer year/month eg 2014 or 201410
+            - req._pl_nextperiod ditto
     eg see chart()
     """
-    pass
+    self.player.overviewing=True
 
-  def prevmonth(self,month):
-      "return prior integer year/month eg 201410"
-      if str(month).endswith('01'):
-        return month-89
-      else:
-        return month-1  
-      
-  def nextmonth(self,month): 
-      "return subsequent integer year/month eg 201412"
-#      if month<(int(DATE())//100):
-      if str(month).endswith('12'):
-        return month+89
-      else:
-        return month+1  
-      return ""
+  def prevperiod(self,period):
+      "return prior integer year/month eg 2014 or 201410"
+      if (period>9999) and str(period).endswith('01'):
+        return period-89
+      elif period:
+        return period-1
+      return 0
 
-  def get_chartmonth(self,req):
-    """return required month-related values based on req.month
-      if req.month is specified as an integer-date string/int, eg '201403'
+  def nextperiod(self,period):
+      "return subsequent integer year/month eg 2016 or 201601"
+      if (period>9999) and str(period).endswith('12'):
+        return period+89
+      elif period:
+        return period+1
+      return 0
+
+  def get_chart_period(self,req):
+    """return required period-related values based on req.period
+
+      if req.period is specified as a year - eg 2014
+      then give that year
+
+      elif req.period is specified as an integer-date - eg 201403
       then give that full calender month
-      else default to the month to date
+
+      else default to all-time period (ie 20140101 to date) 
     """
     now=int(DATE())
-    month=safeint(req.month)
-    prior=True # is this a previous month?
-    if not (month and (month<(now//100))): # a complete month
-      month=now//100 # default to current month
-      prior=False
-    start=month*100+1
-    end=self.nextmonth(month)*100+1
-    return month,start,end,prior
+    period=INT(req.period) # allow for it having been a string
+    if period>9999: # assume it is a month
+      if period<(now//100): # a valid complete month
+        prior=True# this is a previous month
+      else:
+        period=now//100 # default to current month
+        prior=False
+      start=period*100+1
+      end=self.nextperiod(period)*100+1
+    else: # assume it is a year
+      if period and (period<(now//10000)): # a prior year
+        prior=True# this is a previous year
+      else:
+        period=now//10000 # default to current year
+        prior=False
+      start=period*10000+101
+      end=self.nextperiod(period)*10000+101
+    return period,start,end,prior
 
-  def monthly_chart(self,req,month,start,end,prior):
-    """ generic monthly chart
+  def period_chart(self,req,period,start,end,prior):
+    """ generic monthly / annual / all-time chart
         expects req._pl_chartkind and self.sql
     """
     # fetch the raw data
-    month,start,end,prior=self.get_chartmonth(req)
-    date=DATE(month*100+1)
-    req.title="%s for %s %s %s" % (req._pl_chartkind,date.datetime.strftime("%B"), month//100,"" if prior  else " to date")
+    period,start,end,prior=self.get_chart_period(req)
+    todate='' if prior else 'to date'
+    if period>9999:
+      date=DATE(period*100+1)
+      req.title=f"{req.alltime} {req._pl_chartkind} for {date.datetime.strftime('%B')} {period//100} {todate}"
+    else:
+      date=DATE(period*10000+101)
+      req.title=f"{req.alltime} {req._pl_chartkind} for {period} {todate}"
     raw=self.list(asObjects=False,sql=self.sql)
     # process the raw data, so it is ready for the template
     req.data=[]
@@ -1396,66 +1416,116 @@ class Page(basePage):
         except: # we have a deleted item - ignore it
           pass
 #      for i in req.data:
-#        print i.uid, i.name, i.times
+#        print(i.uid, i.name, i.times)
     # set more constants for the template to use
-    req.month=month
-    req._pl_prevmonth=self.prevmonth(month)
+    req.period=period
+    req._pl_prevperiod=self.prevperiod(period)
     if prior:
-      req._pl_nextmonth=self.nextmonth(month) 
+      req._pl_nextperiod=self.nextperiod(period) 
     req._pl_len=len(req.data)
     req._pl_start=0
     # and return the template
     return self.charts(req)
 
   def chart(self,req):
-    "monthly track charts"
-    req._pl_chartkind="chart"
+    "monthly or annual track charts"
+    req._pl_chartkind=f"chart"
     db=self.Config.database
-    month,start,end,prior=self.get_chartmonth(req)
-    self.sql="""
+    period,start,end,prior=self.get_chart_period(req)
+    if req.alltime:
+        where=f"`when`<'{end}'"
+    else:
+        where=f"`when`>='{start}' and `when`<'{end}'"
+    self.sql=f"""
         select page,sum(times)
-        from `%s`.plays
-        where `when`>='%s' and `when`<'%s'
+        from `{db}`.plays
+        where {where}
         group by page having sum(times)>1
-#        order by sum(times) desc, `when`;
-        order by sum(times) desc;
-        """ % (db,start,end)
-    return self.monthly_chart(req,month,start,end,prior)
+        order by sum(times) desc
+        limit 500;
+        """
+    return self.period_chart(req,period,start,end,prior)
 
   def album_chart(self,req):
-    "monthly album charts"
+    "monthly or annual album charts"
     req._pl_chartkind="album chart"
     db=self.Config.database
-    month,start,end,prior=self.get_chartmonth(req)
-    self.sql="""
+    period,start,end,prior=self.get_chart_period(req)
+    if req.alltime:
+        where=f"plays.`when`<'{end}'"
+    else:
+        where=f"plays.`when`>='{start}' and plays.`when`<'{end}'"
+    self.sql=f"""
         select album.uid as page, sum(times)
-        from `%s`.plays inner join `%s`.pages on plays.page=pages.uid 
-        inner join `%s`.pages as album on album.uid=pages.parent 
-        where plays.`when`>='%s' and plays.`when`<'%s'
+        from `{db}`.plays inner join `{db}`.pages on plays.page=pages.uid
+        inner join `{db}`.pages as album on album.uid=pages.parent
+        where {where}
         group by album.uid having sum(times)>2
-#        order by sum(times) desc, album.uid desc;
-        order by sum(times) desc;
-        """ % (db,db,db,start,end)
-    return self.monthly_chart(req,month,start,end,prior)
+        order by sum(times) desc
+        limit 500;
+        """
+    return self.period_chart(req,period,start,end,prior)
 
   def artist_chart(self,req):
-    "monthly artist charts"
+    "monthly or annual artist charts"
     req._pl_chartkind="artist chart"
     db=self.Config.database
-    month,start,end,prior=self.get_chartmonth(req)
-    self.sql="""
+    period,start,end,prior=self.get_chart_period(req)
+    if req.alltime:
+        where=f"plays.`when`<'{end}'"
+    else:
+        where=f"plays.`when`>='{start}' and plays.`when`<'{end}'"
+    self.sql=f"""
         select artist.uid as page, sum(times)
-        from `%s`.plays inner join `%s`.pages on plays.page=pages.uid
-        inner join `%s`.pages as album on album.uid=pages.parent
-        inner join `%s`.pages as artist on artist.uid=album.parent
-        where plays.`when`>='%s' and plays.`when`<'%s'
+        from `{db}`.plays inner join `{db}`.pages on plays.page=pages.uid
+        inner join `{db}`.pages as album on album.uid=pages.parent
+        inner join `{db}`.pages as artist on artist.uid=album.parent
+        where {where}
         group by artist.uid having sum(times)>2
-#        order by sum(times) desc, album.uid desc;
-        order by sum(times) desc;
-        """ % (db,db,db,db,start,end)
-    return self.monthly_chart(req,month,start,end,prior)
+        order by sum(times) desc
+        limit 500;
+        """
+    return self.period_chart(req,period,start,end,prior)
 
+  def charts_summary(self,req):
+    "prepares the data for the charts summary, and returns the template"
+    req.title="summary of track plays"
+    req._pl_chartkind="charts summary"
+    xperiod=req.period
+    req.period=int(DATE())//100 # current month
+    req.data=[]
+    while True:
+      # get one year's data
+      months=[0]*12
+      annual=0
+      while True:
+        plays=self.monthly_plays(req)
+#        print(req.month,' plays = ',plays)
+        year=req.period//100
+        month=req.period%100
+        months[month-1]=plays
+        annual+=plays
+#        print("year:",year," month:",month," months:",months," annual:",annual)
+#        print("type of month: ",type(month))
+        req.period=self.prevperiod(req.period)
+        if month==1:
+          break
+      # and add it to req.data 
+      if not annual:
+        # or (INT(req.month)<201400): # O/S: the 201400 condition is specific to the original IHM dataset, but this should not affect any newer datasets
+        break
+      req.data.append((year,months,annual))
+    # restore the previous req.period
+    req.period=xperiod
+    # and return the template
+    return self.charts(req)
 
+  def monthly_plays(self,req):
+    "total plays for req.month - for use by charts_summary() "
+    db=self.Config.database
+    req.period,start,end,prior=self.get_chart_period(req)
+    plays=INT(self.Play.sum(item="times",where=f"`when`>='{start}' and `when`<'{end}'"))
+    return plays
 
 ######## additions ##################################
 

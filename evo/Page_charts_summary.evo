@@ -1,0 +1,17 @@
+# display the charts summmary
+div:
+  table: cls='subtle', style='text-align:right'
+    tr: cls='head'
+      td:'year'
+      for month in ('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'):
+        td:month
+      td:'plays'
+    stripe="stripe" 
+    tr: cls=stripe
+    for year,months,annual in req.data:
+      stripe=(not stripe) and "stripe" or ""
+      tr: cls=stripe
+        th:year
+        for plays in months:
+          td:plays
+        th:annual

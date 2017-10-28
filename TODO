@@ -1,3 +1,5 @@
+*** fix Page.version - remove < and > 
+
 * why do many images have a "composer" of a slash followd by the parent uid ????
 
 *** auto playlist for default when there is no play order:

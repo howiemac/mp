@@ -10,18 +10,23 @@ div:id='overview'
  div:id='overviewtext'
   Page_header.evo
   div: id="content"
-   Page_album_text_header.evo
-   table:style="height:100%; padding-right:20px; vertical-align:middle", cls="subtle"
-    for track in self.get_children_by_kind('track'):
-     ok= track.rating >= track.minrating()
-     state='enabled' if ok else 'disabled'
-     tr:cls='light hilite' if (track.uid==self.transport.uid) else 'light', style="height:32px"
-      td:track.seq or "", cls="disabled wee"
-      td:cls=state
-       a:track.name, href=track.url()
-      td:cls="light wee"
-       track.display_length()
-      td:cls=state
-       track.rating_symbol()
-      td:cls="%s wee" % state
-       track.score_symbol()
+#   Page_album_text_header.evo
+    pob=self.get_pob()
+    a: href=pob.url()
+      big:self.artist or pob.get_name()
+    br:
+    br:
+    table:style="height:100%; padding-right:20px; vertical-align:middle", cls="subtle"
+      for track in self.get_children_by_kind('track'):
+        ok= track.rating >= track.minrating()
+        state='enabled' if ok else 'disabled'
+        tr:cls='light hilite' if (track.uid==self.transport.uid) else 'light', style="height:32px"
+          td:track.seq or "", cls="disabled wee"
+          td:cls=state
+            a:track.name, href=track.url()
+          td:cls="light wee"
+            track.display_length()
+          td:cls=state
+            track.rating_symbol()
+          td:cls="%s wee" % state
+            track.score_symbol()
