@@ -11,9 +11,9 @@ div: id='contentheader'
 #    Page_inline_transport.evo
   Page_header_end.evo
   summary=req._pl_chartkind=="charts summary"
+  alltime=f"&alltime={req.alltime}" if req.alltime else ""
   if not summary:
     method=req._pl_chartkind.replace(" ","_")
-    alltime=f"&alltime={req.alltime}" if req.alltime else ""
     a:"previous", href=self.url(f'{method}?period={req._pl_prevperiod}{alltime}')
     if req._pl_nextperiod:
       a:"next", href=self.url(f'{method}?period={req._pl_nextperiod}{alltime}')

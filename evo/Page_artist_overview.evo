@@ -11,23 +11,19 @@ div:id='overview'
   Page_header.evo
   div: id="content"
    Page_parent_link.evo
-#   table:style="height:100%; padding-right:20px;", cls="subtle"
+
+   # show albums rated at minrating or better
    for album in self.get_minrated_children_by_kind('album',orderby='`when`'):
-#     table:style="height:100%; padding-right:20px;", cls="subtle"
      table:style="display:inline-block;", cls="subtle"
-#      div:
-#     if album.rating >= min(0,self.minrating()):
       tr:
-      #style="height:2em"
        td: style="vertical-align:top"
-       #cls='light hilite' if (self.player.list and album.uid==self.player.list.uid) else 'light',
          div:style='width:15em;'
            album.Page_inline_transport.evo
          div: cls='summaryimage'
            image=album.get_image()
            if image:
              a:title=image.name, href=album.url(), style="float:left; margin-right:1em"
-               img:src=image.file_url(), alt=image.code, style="width:15em; height:15em"
+               img:src=image.file_url(), alt=image.code, title=f"{album.when}", style="width:15em; height:15em"
          div:style='float:left;width:15em;'
            album.Page_summaryheader.evo
 #       td: style="vertical-align:top"
@@ -35,4 +31,23 @@ div:id='overview'
 #           span:album.get_name(), cls="norm enabled"
 ##         album.Page_summaryinfo.evo
 #         album.Page_summarytracks.evo
+
+   # show positive-rated albums below minrating
+   div: cls='row'
+     minrating=self.minrating()
+     if minrating>0:
+      for album in self.list(parent=self.uid,kind='album',where=f'rating>=0 and rating<{minrating}',orderby='`when`'):
+       table:style="display:inline-block;", cls="subtle"
+        tr:
+         td: style="vertical-align:top"
+#           div:style='width:7.5em;'
+#            album.Page_inline_transport.evo
+           div: cls='summaryimage'
+             image=album.get_image()
+             if image:
+               a:title=image.name, href=album.url(), style="float:left; margin-right:1em"
+                 img:src=image.thumb_url(), alt=image.code, title=f"{album.name} ({album.when})", style="width:7.5em; height:7.5em"
+#           div:style='float:left;width:7.5em;'
+#             album.Page_summaryheader.evo
+
 #Page_playlist_table.evo
