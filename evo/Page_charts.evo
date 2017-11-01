@@ -19,7 +19,7 @@ div: id='contentheader'
       a:"next", href=self.url(f'{method}?period={req._pl_nextperiod}{alltime}')
     if req.period>9999:
       a:"annual", href=self.url(f'{method}?period={req.period//100}{alltime}')
-    if req.period<9999:
+    else:
       a:"monthly", href=self.url(f'{method}?period={req.period*100+12}{alltime}')
     if req.alltime:
       a:"periodic", href=self.url(f'{method}?period={req.period}')

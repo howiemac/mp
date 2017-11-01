@@ -1396,14 +1396,15 @@ class Page(basePage):
     # fetch the raw data
     period,start,end,prior=self.get_chart_period(req)
     todate='' if prior else 'to date'
-    if period>9999:
-#      date=DATE(period*100+1)
-      req.title=f"{req.alltime} {req._pl_chartkind} for {date.datetime.strftime('%B')} {period//100} {todate}"
-    elif req.alltime and (period==(int(DATE())//10000)):
-      req.title=f"{req.alltime} {req._pl_chartkind}"
+    year=int(str(period)[:4])
+    now=int(DATE())
+    if req.alltime and (period in (now//10000,now//100)):
+        req.title=f"{req.alltime} {req._pl_chartkind}"
+    elif period>9999:
+        date=DATE(period*100+1)
+        req.title=f"{req.alltime} {req._pl_chartkind} for {date.datetime.strftime('%B')} {year} {todate}"
     else:
-#      date=DATE(period*10000+101)
-      req.title=f"{req.alltime} {req._pl_chartkind} for {period} {todate}"
+        req.title=f"{req.alltime} {req._pl_chartkind} for {year} {todate}"
     raw=self.list(asObjects=False,sql=self.sql)
     # process the raw data, so it is ready for the template
     req.data=[]

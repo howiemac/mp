@@ -45,7 +45,7 @@ div:id='overview'
            div: cls='summaryimage'
              image=album.get_image()
              if image:
-               a:title=image.name, href=album.url(), style="float:left; margin-right:1em"
+               a:title=image.name, href=album.url(), style="float:left; margin-right:0.5em"
                  img:src=image.thumb_url(), alt=image.code, title=f"{album.name} ({album.when})", style="width:7.5em; height:7.5em"
 #           div:style='float:left;width:7.5em;'
 #             album.Page_summaryheader.evo
