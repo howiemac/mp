@@ -1,4 +1,6 @@
 # include for Page_view_form.evo 
+## disable manual adding of pages
+# Page_child_add.evo
 for item in req.pages:
 #  ok=(item.rating >= self.minrating())
 #  state='enabled' if ok else 'disabled'
