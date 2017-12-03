@@ -298,7 +298,8 @@ border-top:8px double #444;
 }
 
 .acts img, .editacts img {
-height:16px;
+/*height:16px;*/
+background-color:#DDD;
 }
 
 
