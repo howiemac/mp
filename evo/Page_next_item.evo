@@ -25,8 +25,8 @@ div:id="next_nav", cls="wee"
     div:id='next_item'
      a:href=next.url(act),title=("next %s" % kind)
       span:next.get_name()
-      span:"&raquo;"
       span:"" if next.artist==self.artist else (" - by %s" % next.artist)
+      span:"&raquo;"
   if prev: 
     div:id='prev_item'
      a:href=prev.url(act),title=("previous %s" % kind)
