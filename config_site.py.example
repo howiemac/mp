@@ -4,10 +4,13 @@ THIS SHOULD NOT BE STORED IN THE REPOSITORY
 
 """
 
-#port='???'  # default is 8080
+port='8088'  # default is 8080
 #database='???' # default is app folder name
 
-#domains=["127.0.0.1"] #use this for local testing
+domains=["127.0.0.1","localhost"] #use this for local testing
 #domains=["mydomain.org","www.mydomain.org"] #use this for live site
 
+urlhost="%s:%s" % (domains[0],port)  
+
+additions_folder="/home/yourid/mp_additions"
 
