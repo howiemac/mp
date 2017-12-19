@@ -1735,7 +1735,7 @@ class Page(basePage):
     error=False
     if path:
       print("processing %s to %s" % (path,self.uid))
-      f=open(path,'r') 
+      f=open(path,'rb') 
       filedata=f.read()
       extension=(imghdr.what('',filedata) or path.rsplit(".")[-1].lower()).replace('jpeg','jpg')
       if not filedata:
