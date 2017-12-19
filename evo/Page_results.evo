@@ -4,7 +4,6 @@ if req.searchfor:
   div:id='pagetitle'
    # title
    div: id="pagetitleline"
-   Page_error.evo
  div: id='content'
   for page in req.get('results',[]):
    div: cls='summary'

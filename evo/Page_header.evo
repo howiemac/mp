@@ -3,7 +3,6 @@ div: id='contentheader'
   Page_header_start.evo
   div:id='pagetitle'
    div: id="pagetitleline"
-    Page_error.evo
 #    div: "VOLUME=%s" % self.transport.audio_get_volume() 
 
 #    # speaker

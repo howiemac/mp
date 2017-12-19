@@ -9,7 +9,7 @@ html:
         script: src="/site/js/app.js"
 #        Page_player_polling.evo
         div: id="pagesize"
-            wrapper_error.evo
+            wrapper_alert.evo
             content.here
         # add breaks to allow page to scroll above footer transport display
         br:

@@ -1,7 +1,0 @@
-# message, warning, or error display
-if req.get("message"):
- div:req.message, id="message"
-if req.get("warning"):
- div:req.warning, id="warning"
-if req.get("error"):
- div:req.error, id="error"  

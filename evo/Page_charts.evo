@@ -3,7 +3,6 @@ div: id='contentheader'
 # div:id='charts'
   Page_header_start.evo
   div: id="pagetitleline"
-    Page_error.evo
     Page_navigation.evo
     # title
     span: cls='title'
