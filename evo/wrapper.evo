@@ -5,6 +5,7 @@ html:
     body: id=req.pageid or 'standardbody'
         script: src="/site/evoke/js/jquery.js"
         script: src="/site/evoke/js/jquery.autosize.js"
+        script: src="/site/evoke/js/jquery.hotkeys.js"
         script: src="/site/evoke/js/evoke.js"
         script: src="/site/js/app.js"
 #        Page_player_polling.evo

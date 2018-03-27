@@ -132,7 +132,7 @@ font-size:80%;
  }
 
 strong {
-font-style:bold;
+font-weight:bold;
  }
 
 cite {
@@ -164,8 +164,8 @@ font-style:oblique;
  }
  
 center{
-padding: none;
-margin: none;
+padding: 0;
+margin: 0;
 } 
 
 /* anchors  */
@@ -338,7 +338,7 @@ margin:0 auto;
 
 .bigform dt {
 margin-top: 0.8em;
-font: bold;
+font-weight: bold;
 /*display:inline;*/
 float:left;
 width:30%;
@@ -347,7 +347,7 @@ text-align:left;
 
 .bigform dd {
 margin-top: 0.8em;
-font: bold;
+font-weight: bold;
 /*display:inline;*/
  }
 
@@ -355,7 +355,7 @@ font: bold;
 .bigform label {
 white-space: nowrap;
 color: #253341;
-font: bold;
+font-weight: bold;
 margin:0.5em 0 0 2em;
 line-height: normal;
  }
@@ -399,7 +399,7 @@ width:auto;
  }
 
 #login_form #reminder a{
-font-size: 100%
+font-size: 100%;
 font-style: normal;
 text-decoration: underline;
 font-weight: normal;
@@ -920,7 +920,7 @@ font-size:70%;
 /* site nav */
 
 #navpanel {
-margin: 0.2em 0.2em 0 0.2em
+margin: 0.2em 0.2em 0 0.2em;
 padding-top: 0.4em;
  }
 

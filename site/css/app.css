@@ -57,7 +57,7 @@ vertical-align:middle;
 
 
 #rate-score{
-float:right;
+/"float:right;"/
 display:inline-block;
 margin-right:2em;
 }

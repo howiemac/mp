@@ -4,14 +4,6 @@ span: id="transport"
   if self.player.list:
     Page_player_polling.evo
 
-  # play order
-  span: id="playorder-button"
-      src= self.player.list and self.player.list.uid or 0
-      lit = "_lit" if (self.uid in (1,src)) else ""
-      source = (src and lit and self.uid==1)
-      a: href = self.get(src).url("auto") if source else self.get(1).url()
-       button: accesskey="L", title=(self.player.list and ("source" if source else "play order") or "")
-        img: src="%s/images/playorder%s.png" % (theme,lit)
 
   # speaker
   # - click on speaker to show currently-playing tracks
@@ -30,13 +22,25 @@ span: id="transport"
      button: accesskey="P", title="show what is playing"
       img:src = "%s/images/speaker%s%s.png" % (theme,off,lit),  id="speaker"
 
+  # play order
+  span: id="playorder-button"
+      src= self.player.list and self.player.list.uid or 0
+      lit = "_lit" if (self.uid in (1,src)) else ""
+      source = (src and lit and self.uid==1)
+      a: href = self.get(src).url("auto") if source else self.get(1).url()
+       button: accesskey="L", title=(self.player.list and ("source" if source else "play order") or "")
+        img: src="%s/images/playorder%s.png" % (theme,lit)
+
+
   # transport panel
   span: id="transport-panel"
+    # toggle pause with spacebar
+    script: "$(window).bind('keydown','space',function(){$('#togglepause').click(); return false;});"
     if self.player.list:
       # pause / resume
       form: action=self.url('pause'), id="pause"
        act= "resume" if self.player.is_paused else "pause"
-       button: accesskey=' ',title=act
+       button: accesskey=' ',title=act, id="togglepause"
         img:src="%s/images/%s.png" % (theme,act)
     else:
       # autoplay

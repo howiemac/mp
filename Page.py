@@ -1372,7 +1372,7 @@ class Page(basePage):
     now=int(DATE())
     period=INT(req.period) # allow for it having been a string
     if period>9999: # assume it is a month
-      if period<(now//100): # a valid complete month
+      if period<(now//100): # a valid complete previous month
         prior=True# this is a previous month
       else:
         period=now//100 # default to current month
@@ -1383,10 +1383,15 @@ class Page(basePage):
       if period and (period<(now//10000)): # a prior year
         prior=True# this is a previous year
       else:
-        period=now//10000 # default to current year
+        period=now//100 # default to current month
         prior=False
-      start=period*10000+101
-      end=self.nextperiod(period)*10000+101
+      start=period*100+1
+      end=self.nextperiod(period)*100+1
+ 
+ #       period=now//10000 # default to current year
+ #       prior=False
+ #     start=period*10000+101
+ #     end=self.nextperiod(period)*10000+101
     return period,start,end,prior
 
   def period_chart(self,req,period,start,end,prior):

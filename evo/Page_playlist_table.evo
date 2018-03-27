@@ -52,7 +52,7 @@ div:
       # by
       if not artists:
        td:
-        aob=alob.get_pob()
+        aob=alob if albums else alob.get_pob()
         a:href=aob.url(), title=aob.name
          tob.artist
        # from
