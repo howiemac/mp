@@ -16,13 +16,17 @@ div: id='contentheader'
     a:"previous", href=self.url(f'{method}?period={req._pl_prevperiod}{alltime}')
     if req._pl_nextperiod:
       a:"next", href=self.url(f'{method}?period={req._pl_nextperiod}{alltime}')
-    if req.period>9999:
-      a:"annual", href=self.url(f'{method}?period={req.period//100}{alltime}')
-    else:
-      a:"monthly", href=self.url(f'{method}?period={req.period*100+12}{alltime}')
+#    if req.period>9999:
+#      a:"annual", href=self.url(f'{method}?period={req.period//100}{alltime}')
+#    else:
+#      a:"monthly", href=self.url(f'{method}?period={req.period*100+12}{alltime}')
     if req.alltime:
       a:"periodic", href=self.url(f'{method}?period={req.period}')
     else:
+      if req.period>9999:
+        a:"annual", href=self.url(f'{method}?period={req.period//100}{alltime}')
+      else:
+        a:"monthly", href=self.url(f'{method}?period={req.period*100+12}{alltime}')
       a:"all-time", href=self.url(f'{method}?period={req.period}&alltime=all-time')
 #  span: "%s plays" %
   span: id="chartkind"

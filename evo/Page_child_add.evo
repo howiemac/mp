@@ -7,18 +7,18 @@ if not req.user.as_guest():
        select: name='kind', id='textaddkind'
          option:"new genre", value="smartlist", selected='selected'
        input: name='name', value=req.get('name',''),id='textadd'
-       buttoncool:'create'
+       button:'create'
     else:
      # special selection criteria for musickinds
      if (self.kind in self.validchildkinds):
        kinds=self.validchildkinds[self.kind]
      else:
-       kinds= ['page']  
+       kinds= ['page']
      if kinds:
        select: name='kind', id='textaddkind'
          for kind in kinds:
            option:"new %s" %  kind, value=kind, selected=kind==req.kind and "selected" or ""
        input: name='name', value=req.get('name',''),id='textadd'
-       buttoncool:'create'
+       button:'create'
     #/form
 # O/S view children/descendents?
